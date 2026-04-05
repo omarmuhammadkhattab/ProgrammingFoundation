@@ -46,7 +46,7 @@
   .highlight-box.purple{border-color:var(--purple);background:rgba(167,139,250,0.07);}
   .diagram{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:2rem;margin:1.2rem 0;display:flex;justify-content:center;overflow-x:auto;}
   /* Statement cards */
-  .stmt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin:1.2rem 0;}
+  .stmt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(200px,100%),1fr));gap:1rem;margin:1.2rem 0;}
   .stmt-card{border-radius:12px;padding:1.2rem;border:1px solid;text-align:center;}
   .stmt-card.if{background:rgba(69,132,182,0.1);border-color:rgba(69,132,182,0.3);}
   .stmt-card.elif{background:rgba(255,212,59,0.07);border-color:rgba(255,212,59,0.25);}
@@ -92,7 +92,7 @@
   table{width:100%;border-collapse:collapse;font-size:0.88rem;}
   th{padding:0.6rem 1rem;text-align:left;font-size:0.75rem;color:var(--text-muted);font-weight:600;border-bottom:1px solid var(--border);}
   td{padding:0.6rem 1rem;border-bottom:1px solid rgba(255,255,255,0.04);font-family:'Space Mono',monospace;}
-  .table-wrap{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+  .table-wrap{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;overflow:hidden;overflow-x:auto;-webkit-overflow-scrolling:touch;}
   @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
 
   /* LECTURE NAV */
