@@ -42,7 +42,7 @@
   .code-dot{width:10px;height:10px;border-radius:50%;}
   .code-dot.r{background:#ff5f57;}.code-dot.y{background:#febc2e;}.code-dot.g{background:#28c840;}
   .code-label{font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--text-muted);}
-  .code-body{padding:1.2rem 1.5rem;font-family:'Space Mono',monospace;font-size:0.85rem;line-height:1.8;overflow-x:auto;}
+  .code-body{padding:1.2rem 1.5rem;font-family:'Space Mono',monospace;font-size:0.85rem;line-height:1.8;overflow-x:auto;white-space:pre;}
   .kw{color:#ff79c6;}.fn{color:#50fa7b;}.str{color:#f1fa8c;}.cm{color:#6272a4;}.num{color:#bd93f9;}.var{color:#8be9fd;}
   .highlight-box{border-left:3px solid var(--py-yellow);background:rgba(255,212,59,0.05);border-radius:0 8px 8px 0;padding:1rem 1.2rem;margin:1rem 0;font-size:0.92rem;}
   .highlight-box.green{border-color:var(--green);background:rgba(52,211,153,0.07);}
@@ -102,6 +102,72 @@
   .lec-nav-btn.prev,.lec-nav-btn.home{background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text-muted);}
   .lec-nav-btn.next{background:var(--green);color:#0b0f1a;border:1px solid transparent;}
   .lec-nav-btn:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,0.25);}
+
+  /* ═══════════════════════════════════════════
+     MOBILE RESPONSIVE — DS502
+  ═══════════════════════════════════════════ */
+
+  /* On mobile, wrap long code lines instead of scrolling */
+  @media (max-width: 768px) {
+    nav { padding: 0.8rem 1.2rem; }
+    .nav-title { font-size: 0.75rem; }
+    .nav-lec   { display: none; }
+
+    .lec-hero  { padding: 2.5rem 1.2rem 2rem; }
+    .lec-hero h1 { letter-spacing: -0.5px; }
+    .lec-hero p  { font-size: 0.92rem; }
+    .lec-hero::before { font-size: 7rem; right: 1rem; opacity: 0.6; }
+
+    main { padding: 2rem 1rem 4rem; }
+
+    .section { margin-bottom: 2.5rem; }
+    .section h2 { font-size: 1.2rem; }
+
+    /* THE KEY FIX: wrap code on small screens */
+    .code-body {
+      font-size: 0.75rem !important;
+      padding: 0.9rem 1rem !important;
+      white-space: pre-wrap !important;
+      word-break: break-word !important;
+      overflow-x: visible !important;
+    }
+
+    .quiz-code {
+      font-size: 0.75rem;
+      padding: 0.6rem 0.8rem;
+    }
+
+    .highlight-box { font-size: 0.85rem; padding: 0.8rem 1rem; }
+
+    .stmt-grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+    /* Bottom nav: stack on very small screens */
+    .lec-nav { flex-wrap: wrap; gap: 0.6rem; margin-top: 2.5rem; padding: 1.5rem 0 0.5rem; }
+    .lec-nav-btn { font-size: 0.7rem; padding: 0.6rem 1rem; }
+
+    /* Tables */
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+    /* Terminal */
+    #py-code { font-size: 0.75rem; }
+    #py-output { font-size: 0.75rem; }
+    .snip-btn  { font-size: 0.65rem; }
+
+    .quiz-section { padding: 1.2rem 1rem; }
+    .quiz-opt { font-size: 0.8rem; padding: 0.35rem 0.8rem; }
+
+    .diagram { padding: 1rem; }
+  }
+
+  @media (max-width: 480px) {
+    .lec-hero h1 { font-size: 1.7rem; }
+    .code-body   { font-size: 0.68rem !important; }
+    .stmt-grid   { grid-template-columns: 1fr !important; }
+    .lec-nav     { flex-direction: column; align-items: stretch; }
+    .lec-nav-btn { justify-content: center; }
+    .lec-nav-spacer { display: none; }
+  }
+
 </style>
 </head>
 <body>
