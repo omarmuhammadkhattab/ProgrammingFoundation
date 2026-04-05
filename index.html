@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DS502 – Programming Foundation</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0f1a;
+    --bg2: #111827;
+    --bg3: #1a2236;
+    --py-yellow: #FFD43B;
+    --py-blue: #4584b6;
+    --py-blue-light: #5ba3d9;
+    --accent: #FFD43B;
+    --text: #e2e8f0;
+    --text-muted: #94a3b8;
+    --border: rgba(255,255,255,0.07);
+    --glow: 0 0 40px rgba(255,212,59,0.12);
+    --card-bg: rgba(26,34,54,0.8);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.5;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top:0; left:0; right:0; z-index:100;
+    display: flex; align-items:center; justify-content:space-between;
+    padding: 1rem 3rem;
+    background: rgba(11,15,26,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.1rem; font-weight:700;
+    color: var(--py-yellow);
+    letter-spacing: -0.5px;
+  }
+  .nav-logo span { color: var(--text-muted); font-weight:400; }
+  .nav-links { display:flex; gap:2rem; }
+  .nav-links a {
+    color: var(--text-muted); text-decoration:none;
+    font-size:0.9rem; font-weight:500;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--py-yellow); }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative; z-index:1;
+    min-height: 100vh;
+    display: flex; flex-direction:column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 8rem 2rem 4rem;
+    overflow: hidden;
+  }
+
+  .hero-bg-grid {
+    position:absolute; inset:0; z-index:0;
+    background-image:
+      linear-gradient(rgba(69,132,182,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(69,132,182,0.05) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 20%, transparent 100%);
+  }
+
+  .hero-orb {
+    position:absolute; border-radius:50%; filter:blur(80px); pointer-events:none;
+  }
+  .hero-orb-1 { width:600px; height:400px; background: radial-gradient(circle, rgba(69,132,182,0.18) 0%, transparent 70%); top:-100px; left:50%; transform:translateX(-50%); }
+  .hero-orb-2 { width:300px; height:300px; background: radial-gradient(circle, rgba(255,212,59,0.1) 0%, transparent 70%); bottom:100px; right:10%; }
+
+  .badge {
+    display:inline-flex; align-items:center; gap:0.5rem;
+    background: rgba(255,212,59,0.1); border:1px solid rgba(255,212,59,0.3);
+    color: var(--py-yellow); font-family:'Space Mono', monospace;
+    font-size:0.75rem; padding:0.35rem 1rem; border-radius:100px;
+    margin-bottom: 2rem; letter-spacing:1px;
+    animation: fadeUp 0.6s ease both;
+  }
+  .badge-dot { width:7px; height:7px; background:var(--py-yellow); border-radius:50%; animation: pulse 2s infinite; }
+
+  .hero h1 {
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    font-weight: 700; line-height: 1.1;
+    letter-spacing: -2px;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+  .hero h1 em { font-style:normal; color: var(--py-yellow); }
+  .hero h1 .blue { color: var(--py-blue-light); }
+
+  .hero-sub {
+    max-width: 560px; margin: 1.5rem auto 0;
+    color: var(--text-muted); font-size:1.1rem; line-height:1.7; font-weight:300;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .hero-meta {
+    display:flex; gap:2.5rem; margin-top:3rem; justify-content:center;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+  .hero-meta-item { text-align:center; }
+  .hero-meta-num {
+    font-family:'Space Mono', monospace; font-size:2rem; font-weight:700;
+    color: var(--py-yellow);
+  }
+  .hero-meta-label { color:var(--text-muted); font-size:0.85rem; margin-top:0.2rem; }
+
+  /* ── SNAKE DECORATION ── */
+  .snake-svg { animation: fadeUp 0.6s 0.15s ease both; margin:2rem 0; }
+
+  /* ── SECTION ── */
+  section { position:relative; z-index:1; padding: 5rem 2rem; }
+  .container { max-width:1100px; margin:0 auto; }
+  .section-label {
+    font-family:'Space Mono', monospace; font-size:0.7rem;
+    letter-spacing:3px; color:var(--py-blue-light); text-transform:uppercase;
+    margin-bottom:0.8rem;
+  }
+  .section-title {
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    font-weight:700; letter-spacing:-1px;
+    margin-bottom:0.5rem;
+  }
+  .section-desc { color:var(--text-muted); font-size:1rem; max-width:500px; line-height:1.7; margin-bottom:3rem; }
+
+  /* ── LECTURE CARDS ── */
+  .lectures-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
+    gap: 1.5rem;
+  }
+  .lecture-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: all 0.3s ease;
+    position: relative; overflow:hidden;
+    backdrop-filter: blur(10px);
+  }
+  .lecture-card::before {
+    content:''; position:absolute; inset:0; border-radius:16px;
+    background: linear-gradient(135deg, rgba(255,212,59,0.05) 0%, transparent 60%);
+    opacity:0; transition: opacity 0.3s;
+  }
+  .lecture-card:hover { transform: translateY(-4px); border-color: rgba(255,212,59,0.3); box-shadow: var(--glow); }
+  .lecture-card:hover::before { opacity:1; }
+
+  .card-num {
+    font-family:'Space Mono', monospace; font-size:0.7rem;
+    color:var(--text-muted); letter-spacing:2px; margin-bottom:1rem;
+  }
+  .card-icon {
+    width:48px; height:48px; border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom:1.2rem; font-size:1.5rem;
+  }
+  .card-icon.yellow { background:rgba(255,212,59,0.12); }
+  .card-icon.blue { background:rgba(69,132,182,0.15); }
+  .card-icon.green { background:rgba(52,211,153,0.12); }
+  .card-icon.purple { background:rgba(167,139,250,0.12); }
+
+  .card-title { font-size:1.2rem; font-weight:700; margin-bottom:0.5rem; }
+  .card-desc { color:var(--text-muted); font-size:0.9rem; line-height:1.6; margin-bottom:1.5rem; }
+
+  .card-topics { display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:1.5rem; }
+  .topic-tag {
+    font-size:0.75rem; padding:0.25rem 0.7rem; border-radius:100px;
+    background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1);
+    color:var(--text-muted); font-family:'Space Mono', monospace;
+  }
+
+  .card-footer {
+    display:flex; align-items:center; justify-content:space-between;
+    border-top:1px solid var(--border); padding-top:1rem;
+  }
+  .card-cta { color:var(--py-yellow); font-size:0.85rem; font-weight:600; display:flex; align-items:center; gap:0.4rem; }
+  .card-cta svg { transition: transform 0.2s; }
+  .lecture-card:hover .card-cta svg { transform: translateX(4px); }
+
+  /* ── GRADE BOX ── */
+  .grade-section { background: var(--bg2); }
+  .grades-grid {
+    display:grid; grid-template-columns: repeat(3, 1fr); gap:1.5rem;
+    max-width:700px;
+  }
+  .grade-item {
+    background: var(--card-bg); border:1px solid var(--border); border-radius:12px;
+    padding:1.5rem; text-align:center;
+  }
+  .grade-val { font-family:'Space Mono', monospace; font-size:2.5rem; font-weight:700; color:var(--py-yellow); }
+  .grade-pct { font-size:0.8rem; color:var(--text-muted); }
+  .grade-name { font-size:0.85rem; margin-top:0.3rem; color:var(--text); font-weight:500; }
+
+  /* ── FOOTER ── */
+  footer {
+    position:relative; z-index:1;
+    border-top:1px solid var(--border); padding:2rem 3rem;
+    display:flex; align-items:center; justify-content:space-between;
+    color:var(--text-muted); font-size:0.85rem;
+  }
+  footer a { color:var(--py-yellow); text-decoration:none; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+
+  /* ── CODE STRIP ── */
+  .code-strip {
+    background: var(--bg2); border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+    padding: 1.5rem 0; overflow:hidden; position:relative; z-index:1;
+  }
+  .code-strip-inner {
+    display:flex; gap:4rem; animation: scrollLeft 20s linear infinite; white-space:nowrap;
+  }
+  .code-strip-item {
+    font-family:'Space Mono', monospace; font-size:0.8rem; color:var(--text-muted);
+    display:flex; align-items:center; gap:0.8rem;
+  }
+  .code-strip-item span { color:var(--py-yellow); }
+  @keyframes scrollLeft { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">DS502 <span>/ Programming Foundation</span></div>
+  <div class="nav-links">
+    <a href="#lectures">Lectures</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-grid"></div>
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+
+  <div class="badge"><span class="badge-dot"></span> Cairo University · FGSSR · 2025–2026</div>
+
+  <!-- Python snake SVG -->
+  <div class="snake-svg">
+    <svg width="80" height="80" viewBox="0 0 111.06 111.06" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="pyB" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#4584b6"/><stop offset="100%" stop-color="#5ba3d9"/></linearGradient>
+      <linearGradient id="pyY" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFD43B"/><stop offset="100%" stop-color="#FFE873"/></linearGradient></defs>
+      <path fill="url(#pyB)" d="M55.53 0C24.87 0 26.74 13.5 26.74 13.5v14h29.28v4H16.47S0 29.72 0 60.66s14.42 29.9 14.42 29.9h8.61v-14.4s-.46-14.42 14.18-14.42h24.4s13.7.22 13.7-13.25V13.94S77.5 0 55.53 0zm-1.5 8c2.67 0 4.84 2.17 4.84 4.84s-2.17 4.84-4.84 4.84-4.84-2.17-4.84-4.84S51.36 8 54.03 8z"/>
+      <path fill="url(#pyY)" d="M55.53 111.06c30.66 0 28.79-13.5 28.79-13.5v-14H55.04v-4h39.55s16.47 1.78 16.47-29.16S96.64 20.5 96.64 20.5h-8.61v14.4s.46 14.42-14.18 14.42H49.45s-13.7-.22-13.7 13.25v37.95s-2.19 14.54 19.78 14.54zm1.5-8c-2.67 0-4.84-2.17-4.84-4.84s2.17-4.84 4.84-4.84 4.84 2.17 4.84 4.84-2.17 4.84-4.84 4.84z"/>
+    </svg>
+  </div>
+
+  <h1>Python for<br><em>Data Science</em></h1>
+  <p class="hero-sub">A comprehensive introduction to programming with Python — from variables and data types to control flow and data structures.</p>
+
+
+</section>
+
+<!-- CODE STRIP -->
+<div class="code-strip">
+  <div class="code-strip-inner">
+    <div class="code-strip-item">>>> <span>print</span>("Hello, Cairo University")</div>
+    <div class="code-strip-item">>>> x = <span>5</span>; type(x) → <span>int</span></div>
+    <div class="code-strip-item">>>> myList = [<span>1</span>, <span>2</span>, <span>3</span>]</div>
+    <div class="code-strip-item">>>> <span>if</span> score >= 90: grade = <span>"A"</span></div>
+    <div class="code-strip-item">>>> myDict = {<span>"key"</span>: <span>"value"</span>}</div>
+    <div class="code-strip-item">>>> <span>for</span> item <span>in</span> myList: ...</div>
+    <!-- repeat for seamless loop -->
+    <div class="code-strip-item">>>> <span>print</span>("Hello, Cairo University")</div>
+    <div class="code-strip-item">>>> x = <span>5</span>; type(x) → <span>int</span></div>
+    <div class="code-strip-item">>>> myList = [<span>1</span>, <span>2</span>, <span>3</span>]</div>
+    <div class="code-strip-item">>>> <span>if</span> score >= 90: grade = <span>"A"</span></div>
+    <div class="code-strip-item">>>> myDict = {<span>"key"</span>: <span>"value"</span>}</div>
+    <div class="code-strip-item">>>> <span>for</span> item <span>in</span> myList: ...</div>
+  </div>
+</div>
+
+<!-- LECTURES -->
+<section id="lectures">
+  <div class="container">
+    <div class="section-label">// course content</div>
+    <h2 class="section-title">Lecture Notes</h2>
+    <p class="section-desc">Each lecture includes visual explanations, code examples, and a live Python terminal to practice in the browser.</p>
+
+    <div class="lectures-grid">
+
+      <!-- Lecture 1 -->
+      <a href="lecture1.html" class="lecture-card">
+        <div class="card-num">LECTURE 01</div>
+        <div class="card-icon yellow">🐍</div>
+        <div class="card-title">Introduction to Python</div>
+        <div class="card-desc">What is programming? Meet Python — why it's the language of choice for data science. Set up your environment and write your first program.</div>
+        <div class="card-topics">
+          <span class="topic-tag">variables</span>
+          <span class="topic-tag">data types</span>
+          <span class="topic-tag">input/output</span>
+          <span class="topic-tag">comments</span>
+          <span class="topic-tag">IDE setup</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-cta">Open lecture <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </div>
+      </a>
+
+      <!-- Lecture 2 -->
+      <a href="lecture2.html" class="lecture-card">
+        <div class="card-num">LECTURE 02</div>
+        <div class="card-icon blue">⚙️</div>
+        <div class="card-title">Data Types & Operations</div>
+        <div class="card-desc">Explore Python's core data types: integers, floats, strings, and booleans. Master arithmetic, comparison, and logical operators.</div>
+        <div class="card-topics">
+          <span class="topic-tag">int / float</span>
+          <span class="topic-tag">strings</span>
+          <span class="topic-tag">boolean</span>
+          <span class="topic-tag">operators</span>
+          <span class="topic-tag">slicing</span>
+        </div>
+        <div class="card-footer">
+          <span style="font-size:0.8rem;color:var(--text-muted)">5 in-class examples</span>
+          <span class="card-cta">Open lecture <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </div>
+      </a>
+
+      <!-- Lecture 3 -->
+      <a href="lecture3.html" class="lecture-card">
+        <div class="card-num">LECTURE 03</div>
+        <div class="card-icon green">📦</div>
+        <div class="card-title">Python Data Structures</div>
+        <div class="card-desc">Organize and store collections of data with Lists, Tuples, Sets, and Dictionaries. Understand when and why to use each one.</div>
+        <div class="card-topics">
+          <span class="topic-tag">list</span>
+          <span class="topic-tag">tuple</span>
+          <span class="topic-tag">set</span>
+          <span class="topic-tag">dictionary</span>
+          <span class="topic-tag">mutability</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-cta">Open lecture <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </div>
+      </a>
+
+      <!-- Lecture 4 -->
+      <a href="lecture4.html" class="lecture-card">
+        <div class="card-num">LECTURE 04</div>
+        <div class="card-icon purple">🔀</div>
+        <div class="card-title">Conditions & Branching</div>
+        <div class="card-desc">Control the flow of your programs with if, elif, and else statements. Handle multiple conditions and avoid common pitfalls.</div>
+        <div class="card-topics">
+          <span class="topic-tag">if / else</span>
+          <span class="topic-tag">elif</span>
+          <span class="topic-tag">nested if</span>
+          <span class="topic-tag">indentation</span>
+          <span class="topic-tag">branching</span>
+        </div>
+        <div class="card-footer">
+          <span style="font-size:0.8rem;color:var(--text-muted)">6 quiz questions</span>
+          <span class="card-cta">Open lecture <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+
+
+
+</body>
+</html>

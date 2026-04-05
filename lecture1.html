@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lecture 1 – Introduction to Python | DS502</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"></script>
+<style>
+  :root {
+    --bg:#0b0f1a; --bg2:#111827; --bg3:#1a2236;
+    --py-yellow:#FFD43B; --py-blue:#4584b6; --py-blue-light:#5ba3d9;
+    --text:#e2e8f0; --text-muted:#94a3b8;
+    --border:rgba(255,255,255,0.07);
+    --card-bg:rgba(26,34,54,0.8);
+    --green:#34d399; --red:#f87171; --purple:#a78bfa; --orange:#fb923c;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7;}
+  a{text-decoration:none;}
+
+  /* NAV */
+  nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 2.5rem;background:rgba(11,15,26,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+  .nav-back{display:flex;align-items:center;gap:0.5rem;color:var(--text-muted);font-size:0.9rem;transition:color 0.2s;}
+  .nav-back:hover{color:var(--py-yellow);}
+  .nav-title{font-family:'Space Mono',monospace;font-size:0.85rem;color:var(--py-yellow);}
+  .nav-lec{font-family:'Space Mono',monospace;font-size:0.75rem;color:var(--text-muted);}
+
+  /* HERO */
+  .lec-hero{background:linear-gradient(135deg,var(--bg) 0%,var(--bg3) 100%);border-bottom:1px solid var(--border);padding:4rem 2.5rem 3rem;position:relative;overflow:hidden;}
+  .lec-hero::before{content:'01';position:absolute;right:3rem;top:50%;transform:translateY(-50%);font-family:'Space Mono',monospace;font-size:12rem;font-weight:700;color:rgba(255,255,255,0.02);line-height:1;pointer-events:none;}
+  .lec-num{font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:3px;color:var(--py-blue-light);text-transform:uppercase;margin-bottom:0.8rem;}
+  .lec-hero h1{font-size:clamp(2rem,4vw,3.2rem);font-weight:700;letter-spacing:-1.5px;margin-bottom:1rem;}
+  .lec-hero h1 em{font-style:normal;color:var(--py-yellow);}
+  .lec-hero p{color:var(--text-muted);max-width:560px;font-size:1rem;}
+  .topics-row{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:1.5rem;}
+  .t-chip{font-family:'Space Mono',monospace;font-size:0.72rem;padding:0.3rem 0.8rem;border-radius:100px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:var(--text-muted);}
+
+  /* MAIN LAYOUT */
+  main{max-width:900px;margin:0 auto;padding:3rem 2rem 6rem;}
+
+  /* SECTION BLOCK */
+  .section{margin-bottom:4rem;}
+  .section-header{display:flex;align-items:center;gap:0.8rem;margin-bottom:1.5rem;}
+  .section-icon{width:36px;height:36px;border-radius:10px;background:rgba(255,212,59,0.12);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+  .section h2{font-size:1.5rem;font-weight:700;letter-spacing:-0.5px;}
+  .prose{color:var(--text-muted);font-size:0.97rem;line-height:1.8;margin-bottom:1.2rem;}
+  .prose strong{color:var(--text);}
+
+  /* CARDS */
+  .info-card{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1rem;}
+  .info-card h3{font-size:1rem;font-weight:700;margin-bottom:0.5rem;}
+  .info-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin-top:1rem;}
+  .info-item{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:8px;padding:1rem;}
+  .info-item-title{font-size:0.8rem;color:var(--text-muted);margin-bottom:0.3rem;}
+  .info-item-val{font-size:0.95rem;font-weight:600;}
+
+  /* CODE BLOCK */
+  .code-block{background:#0d1117;border:1px solid rgba(255,255,255,0.1);border-radius:12px;overflow:hidden;margin:1.2rem 0;}
+  .code-header{display:flex;align-items:center;justify-content:space-between;padding:0.7rem 1rem;background:rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.07);}
+  .code-dots{display:flex;gap:6px;}
+  .code-dot{width:10px;height:10px;border-radius:50%;}
+  .code-dot.r{background:#ff5f57;} .code-dot.y{background:#febc2e;} .code-dot.g{background:#28c840;}
+  .code-label{font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--text-muted);}
+  .code-body{padding:1.2rem 1.5rem;font-family:'Space Mono',monospace;font-size:0.85rem;line-height:1.8;overflow-x:auto;}
+  .kw{color:#ff79c6;} .fn{color:#50fa7b;} .str{color:#f1fa8c;} .cm{color:#6272a4;} .num{color:#bd93f9;} .var{color:#8be9fd;}
+
+  /* HIGHLIGHT BOX */
+  .highlight-box{border-left:3px solid var(--py-yellow);background:rgba(255,212,59,0.05);border-radius:0 8px 8px 0;padding:1rem 1.2rem;margin:1rem 0;font-size:0.92rem;}
+  .highlight-box.blue{border-color:var(--py-blue);background:rgba(69,132,182,0.08);}
+  .highlight-box.green{border-color:var(--green);background:rgba(52,211,153,0.07);}
+  .highlight-box.red{border-color:var(--red);background:rgba(248,113,113,0.07);}
+
+  /* DIAGRAM AREA */
+  .diagram{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:2rem;margin:1.2rem 0;display:flex;justify-content:center;overflow-x:auto;}
+
+  /* VARIABLE TABLE */
+  table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:0.9rem;}
+  th{background:rgba(255,255,255,0.05);padding:0.7rem 1rem;text-align:left;font-size:0.8rem;letter-spacing:1px;color:var(--text-muted);font-weight:600;border-bottom:1px solid var(--border);}
+  td{padding:0.6rem 1rem;border-bottom:1px solid var(--border);font-family:'Space Mono',monospace;font-size:0.82rem;}
+  tr:last-child td{border-bottom:none;}
+  td.valid{color:var(--green);} td.invalid{color:var(--red);}
+  .table-wrap{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+
+  /* TERMINAL */
+  .terminal-wrapper{background:#0d1117;border:1px solid rgba(255,255,255,0.12);border-radius:16px;overflow:hidden;margin-top:1rem;}
+  .terminal-header{background:rgba(255,255,255,0.05);padding:0.8rem 1.2rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.08);}
+  .terminal-title{font-family:'Space Mono',monospace;font-size:0.75rem;color:var(--py-yellow);display:flex;align-items:center;gap:0.5rem;}
+  .term-dot{width:8px;height:8px;border-radius:50%;background:var(--py-yellow);animation:pulse 2s infinite;}
+  .terminal-body{padding:1rem;}
+  #py-output{font-family:'Space Mono',monospace;font-size:0.82rem;color:#a3e635;min-height:60px;max-height:200px;overflow-y:auto;padding:0.5rem 0;white-space:pre-wrap;line-height:1.7;}
+  #py-output.error{color:var(--red);}
+  .terminal-input-row{display:flex;align-items:flex-start;gap:0.5rem;margin-top:0.5rem;border-top:1px solid rgba(255,255,255,0.07);padding-top:0.8rem;}
+  .term-prompt{font-family:'Space Mono',monospace;font-size:0.82rem;color:var(--py-blue-light);padding-top:2px;flex-shrink:0;}
+  #py-code{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-family:'Space Mono',monospace;font-size:0.82rem;resize:vertical;min-height:60px;line-height:1.7;}
+  .term-btns{display:flex;gap:0.5rem;margin-top:0.8rem;padding-top:0.5rem;border-top:1px solid rgba(255,255,255,0.07);}
+  .btn-run{background:var(--py-yellow);color:#0b0f1a;border:none;border-radius:8px;padding:0.5rem 1.2rem;font-family:'Space Mono',monospace;font-size:0.78rem;font-weight:700;cursor:pointer;transition:opacity 0.2s;}
+  .btn-run:hover{opacity:0.85;}
+  .btn-clear{background:transparent;color:var(--text-muted);border:1px solid var(--border);border-radius:8px;padding:0.5rem 1rem;font-family:'Space Mono',monospace;font-size:0.78rem;cursor:pointer;transition:all 0.2s;}
+  .btn-clear:hover{border-color:var(--text-muted);}
+  .snippet-btns{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.5rem;}
+  .snip-btn{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:var(--text-muted);font-family:'Space Mono',monospace;font-size:0.7rem;padding:0.25rem 0.6rem;cursor:pointer;transition:all 0.2s;}
+  .snip-btn:hover{background:rgba(255,212,59,0.1);border-color:var(--py-yellow);color:var(--py-yellow);}
+
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+  .section{animation:fadeIn 0.5s ease both;}
+
+  /* LECTURE NAV */
+  .lec-nav{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:4rem;padding:2rem 0 1rem;border-top:1px solid var(--border);}
+  .lec-nav-btn{display:inline-flex;align-items:center;gap:0.5rem;padding:0.75rem 1.5rem;border-radius:10px;font-family:'Space Mono',monospace;font-size:0.78rem;font-weight:700;text-decoration:none;transition:all 0.2s;white-space:nowrap;}
+  .lec-nav-btn.prev,.lec-nav-btn.home{background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text-muted);}
+  .lec-nav-btn.next{background:var(--py-yellow);color:#0b0f1a;border:1px solid transparent;}
+  .lec-nav-btn:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,0.25);}
+  .lec-nav-spacer{flex:1;}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-back" href="index.html">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Back to course
+  </a>
+  <span class="nav-title">DS502</span>
+  <span class="nav-lec">Lecture 01 / 04</span>
+</nav>
+
+<header class="lec-hero">
+  <div class="lec-num">// lecture 01</div>
+  <h1>Introduction to <em>Python</em></h1>
+  <p>From zero to writing your first program — understand what programming is, why Python is amazing, and learn the fundamental building blocks.</p>
+  <div class="topics-row">
+    <span class="t-chip">what is programming</span><span class="t-chip">python interpreter</span>
+    <span class="t-chip">variables</span><span class="t-chip">naming rules</span>
+    <span class="t-chip">input / output</span><span class="t-chip">comments</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- ── 1. WHAT IS PROGRAMMING ── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">💻</div>
+      <h2>What is Programming?</h2>
+    </div>
+    <p class="prose">A <strong>program</strong> is simply a list of instructions that a computer follows to accomplish a task. The person who writes those instructions is called a <strong>programmer</strong>, and the activity of writing them is called <strong>programming</strong>.</p>
+    <p class="prose">Computers only understand <strong>machine language</strong> (0s and 1s). Programming languages like Python act as a human-friendly bridge — they get translated into machine language by a special program called a <strong>compiler or interpreter</strong>.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 700 100" width="100%" style="max-width:640px" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#5ba3d9"/>
+          </marker>
+        </defs>
+        <!-- Box 1: Human -->
+        <rect x="10" y="20" width="150" height="60" rx="10" fill="rgba(69,132,182,0.15)" stroke="#4584b6" stroke-width="1.5"/>
+        <text x="85" y="47" text-anchor="middle" fill="#5ba3d9" font-family="Space Mono,monospace" font-size="10" font-weight="700">Python Code</text>
+        <text x="85" y="63" text-anchor="middle" fill="#94a3b8" font-family="Space Mono,monospace" font-size="9">print("Hello")</text>
+        <!-- Arrow -->
+        <line x1="165" y1="50" x2="225" y2="50" stroke="#5ba3d9" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Box 2 -->
+        <rect x="230" y="20" width="150" height="60" rx="10" fill="rgba(255,212,59,0.1)" stroke="#FFD43B" stroke-width="1.5"/>
+        <text x="305" y="47" text-anchor="middle" fill="#FFD43B" font-family="Space Mono,monospace" font-size="10" font-weight="700">Interpreter</text>
+        <text x="305" y="63" text-anchor="middle" fill="#94a3b8" font-family="Space Mono,monospace" font-size="9">Translates code</text>
+        <!-- Arrow -->
+        <line x1="385" y1="50" x2="445" y2="50" stroke="#5ba3d9" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- Box 3 -->
+        <rect x="450" y="20" width="150" height="60" rx="10" fill="rgba(52,211,153,0.1)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="525" y="47" text-anchor="middle" fill="#34d399" font-family="Space Mono,monospace" font-size="10" font-weight="700">Machine Code</text>
+        <text x="525" y="63" text-anchor="middle" fill="#94a3b8" font-family="Space Mono,monospace" font-size="9">01001000 01100101</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ── 2. WHAT IS PYTHON ── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🐍</div>
+      <h2>What is Python?</h2>
+    </div>
+    <p class="prose">Python is a <strong>popular, general-purpose programming language</strong> created by <strong>Guido van Rossum</strong> and first released in 1991. It's designed to be easy to read and write, making it perfect for beginners and professionals alike.</p>
+
+    <div class="info-grid">
+      <div class="info-item"><div class="info-item-title">Created by</div><div class="info-item-val" style="color:var(--py-yellow)">Guido van Rossum</div></div>
+      <div class="info-item"><div class="info-item-title">First released</div><div class="info-item-val" style="color:var(--py-blue-light)">1991</div></div>
+      <div class="info-item"><div class="info-item-title">Type</div><div class="info-item-val" style="color:var(--green)">Interpreted</div></div>
+      <div class="info-item"><div class="info-item-title">Style</div><div class="info-item-val" style="color:var(--purple)">Open Source</div></div>
+    </div>
+
+    <div class="highlight-box blue" style="margin-top:1.2rem">
+      <strong>Python is used for:</strong> Web applications · Desktop applications · Big data & mathematics · Machine Learning & Data Science · Task automation & analysis
+    </div>
+  </div>
+
+  <!-- ── 3. WHY PYTHON ── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">⭐</div>
+      <h2>Why Python?</h2>
+    </div>
+    <div class="diagram">
+      <svg viewBox="0 0 620 300" width="100%" style="max-width:600px" xmlns="http://www.w3.org/2000/svg">
+        <!-- Center circle first so text layers on top -->
+        <circle cx="310" cy="150" r="42" fill="rgba(255,212,59,0.12)" stroke="#FFD43B" stroke-width="2"/>
+        <text x="310" y="155" text-anchor="middle" fill="#FFD43B" font-family="Space Mono,monospace" font-size="13" font-weight="700">PYTHON</text>
+        <g font-family="DM Sans,sans-serif" fill="#e2e8f0">
+          <!-- Top: Popular -->
+          <line x1="310" y1="79" x2="310" y2="108" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+          <circle cx="310" cy="52" r="30" fill="rgba(69,132,182,0.2)" stroke="#4584b6" stroke-width="1.5"/>
+          <text x="310" y="48" text-anchor="middle" fill="#5ba3d9" font-size="11" font-weight="700">Popular</text>
+          <text x="310" y="63" text-anchor="middle" fill="#94a3b8" font-size="9">widely used</text>
+          <!-- Right-top: Free & Open -->
+          <line x1="469" y1="111" x2="350" y2="135" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+          <circle cx="496" cy="95" r="30" fill="rgba(52,211,153,0.15)" stroke="#34d399" stroke-width="1.5"/>
+          <text x="496" y="90" text-anchor="middle" fill="#34d399" font-size="11" font-weight="700">Free &amp;</text>
+          <text x="496" y="106" text-anchor="middle" fill="#34d399" font-size="11" font-weight="700">Open</text>
+          <!-- Right-bottom: Simple -->
+          <line x1="469" y1="191" x2="350" y2="167" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+          <circle cx="496" cy="208" r="30" fill="rgba(167,139,250,0.15)" stroke="#a78bfa" stroke-width="1.5"/>
+          <text x="496" y="204" text-anchor="middle" fill="#a78bfa" font-size="11" font-weight="700">Simple</text>
+          <text x="496" y="220" text-anchor="middle" fill="#94a3b8" font-size="9">syntax</text>
+          <!-- Bottom: Community -->
+          <line x1="310" y1="222" x2="310" y2="192" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+          <circle cx="310" cy="250" r="30" fill="rgba(251,146,60,0.15)" stroke="#fb923c" stroke-width="1.5"/>
+          <text x="310" y="246" text-anchor="middle" fill="#fb923c" font-size="11" font-weight="700">Large</text>
+          <text x="310" y="262" text-anchor="middle" fill="#94a3b8" font-size="9">community</text>
+          <!-- Left-bottom: Libraries -->
+          <line x1="152" y1="191" x2="271" y2="167" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+          <circle cx="124" cy="208" r="30" fill="rgba(248,113,113,0.15)" stroke="#f87171" stroke-width="1.5"/>
+          <text x="124" y="204" text-anchor="middle" fill="#f87171" font-size="11" font-weight="700">Vast</text>
+          <text x="124" y="220" text-anchor="middle" fill="#94a3b8" font-size="9">libraries</text>
+          <!-- Left-top: Easy to learn -->
+          <line x1="152" y1="111" x2="271" y2="135" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+          <circle cx="124" cy="95" r="30" fill="rgba(250,204,21,0.15)" stroke="#facc15" stroke-width="1.5"/>
+          <text x="124" y="90" text-anchor="middle" fill="#facc15" font-size="11" font-weight="700">Easy to</text>
+          <text x="124" y="106" text-anchor="middle" fill="#facc15" font-size="11" font-weight="700">learn</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ── 4. COMMENTS ── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">💬</div>
+      <h2>Python Comments</h2>
+    </div>
+    <p class="prose">Comments are notes <strong>for humans</strong>, not the computer. Python completely ignores them. They help explain your code and make it easier to maintain.</p>
+
+    <div class="code-block">
+      <div class="code-header"><div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div><span class="code-label">single-line comment</span></div>
+      <div class="code-body"><span class="cm"># This is a comment — Python ignores this line</span>
+<span class="fn">print</span>(<span class="str">"Hello, World!"</span>)  <span class="cm"># inline comment</span>
+
+<span class="cm"># Comments can also disable code during testing:</span>
+<span class="cm"># print("this line won't run")</span>
+<span class="fn">print</span>(<span class="str">"this line WILL run"</span>)</div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header"><div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div><span class="code-label">multi-line comment</span></div>
+      <div class="code-body"><span class="str">"""
+This is a multi-line comment.
+You can write across many lines.
+It uses triple double-quotes.
+"""</span>
+<span class="fn">print</span>(<span class="str">"Code resumes here"</span>)</div>
+    </div>
+  </div>
+
+  <!-- ── 5. VARIABLES ── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">📦</div>
+      <h2>Variables in Python</h2>
+    </div>
+    <p class="prose">A <strong>variable</strong> is a named container that stores a value in memory. Unlike many other languages, Python doesn't need you to declare the type — just assign and go!</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 480 110" width="100%" style="max-width:480px" xmlns="http://www.w3.org/2000/svg">
+        <defs><marker id="arr2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#FFD43B"/></marker></defs>
+        <text x="38" y="60" fill="#8be9fd" font-family="Space Mono,monospace" font-size="14" font-weight="700">age</text>
+        <line x1="72" y1="54" x2="148" y2="54" stroke="#FFD43B" stroke-width="2" marker-end="url(#arr2)"/>
+        <rect x="152" y="28" width="80" height="52" rx="8" fill="rgba(255,212,59,0.12)" stroke="#FFD43B" stroke-width="1.5"/>
+        <text x="192" y="60" text-anchor="middle" fill="#FFD43B" font-family="Space Mono,monospace" font-size="18" font-weight="700">25</text>
+        <text x="192" y="100" text-anchor="middle" fill="#94a3b8" font-family="Space Mono,monospace" font-size="9">memory box</text>
+        <text x="258" y="35" fill="#94a3b8" font-family="Space Mono,monospace" font-size="9.5">age = 25</text>
+        <text x="258" y="56" fill="#94a3b8" font-family="Space Mono,monospace" font-size="9.5">age = "Ali"</text>
+        <text x="275" y="72" fill="#f87171" font-family="Space Mono,monospace" font-size="9.5">← reassign</text>
+        <text x="258" y="90" fill="#94a3b8" font-family="Space Mono,monospace" font-size="9.5">a = b = c = 0</text>
+      </svg>
+    </div>
+
+    <div class="highlight-box green">
+      <strong>Dynamically typed:</strong> In Python, a variable can change its type. <code style="font-family:Space Mono,monospace;font-size:0.85em">x = 5</code> makes x an integer, then <code style="font-family:Space Mono,monospace;font-size:0.85em">x = "hello"</code> makes x a string — no problem!
+    </div>
+  </div>
+
+  <!-- ── 6. NAMING RULES ── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">📝</div>
+      <h2>Variable Naming Rules</h2>
+    </div>
+    <p class="prose">Variable names can contain <strong>letters (A-Z, a-z)</strong>, <strong>digits (0-9)</strong>, and <strong>underscores (_)</strong>. The first character must NOT be a digit. Names are case-sensitive.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Name</th><th>Valid?</th><th>Reason</th></tr></thead>
+        <tbody>
+          <tr><td>age</td><td class="valid">✓ Valid</td><td style="color:var(--text-muted)">letters only</td></tr>
+          <tr><td>Age</td><td class="valid">✓ Valid</td><td style="color:var(--text-muted)">different from <code>age</code> — case sensitive!</td></tr>
+          <tr><td>number_of_students</td><td class="valid">✓ Valid</td><td style="color:var(--text-muted)">snake_case style</td></tr>
+          <tr><td>_private</td><td class="valid">✓ Valid</td><td style="color:var(--text-muted)">underscore start is ok</td></tr>
+          <tr><td>2fast</td><td class="invalid">✗ Invalid</td><td style="color:var(--text-muted)">starts with a digit</td></tr>
+          <tr><td>my-var</td><td class="invalid">✗ Invalid</td><td style="color:var(--text-muted)">hyphens not allowed</td></tr>
+          <tr><td>for</td><td class="invalid">✗ Invalid</td><td style="color:var(--text-muted)">reserved Python keyword</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="info-card" style="margin-top:1.2rem">
+      <h3>🎨 Multi-word Naming Styles</h3>
+      <div class="code-body" style="background:transparent;padding:0.5rem 0;font-family:Space Mono,monospace;font-size:0.83rem;line-height:2">
+        <span class="cm"># camelCase  →  word boundaries marked by uppercase</span>
+        <br><span class="var">numberOfStudents</span> = <span class="num">30</span>
+        <br><span class="cm"># PascalCase  →  each word capitalized</span>
+        <br><span class="var">NumberOfStudents</span> = <span class="num">30</span>
+        <br><span class="cm"># snake_case  →  recommended by Python style guide (PEP8)</span>
+        <br><span class="var">number_of_students</span> = <span class="num">30</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 7. INPUT / OUTPUT ── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🔁</div>
+      <h2>Reading Input & Printing Output</h2>
+    </div>
+    <p class="prose">Python uses <code style="font-family:Space Mono,monospace;font-size:0.85em;color:var(--green)">input()</code> to read from the user and <code style="font-family:Space Mono,monospace;font-size:0.85em;color:var(--green)">print()</code> to display on the screen.</p>
+
+    <div class="code-block">
+      <div class="code-header"><div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div><span class="code-label">input and output</span></div>
+      <div class="code-body"><span class="cm"># input() always returns a string</span>
+<span class="var">name</span> = <span class="fn">input</span>(<span class="str">"Enter your name: "</span>)
+<span class="fn">print</span>(<span class="str">"Hello, "</span> + <span class="var">name</span>)
+
+<span class="cm"># Convert string to number with int()</span>
+<span class="var">age</span> = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Enter your age: "</span>))
+<span class="fn">print</span>(<span class="str">"You are"</span>, <span class="var">age</span>, <span class="str">"years old"</span>)
+
+<span class="cm"># f-strings are a clean way to format output</span>
+<span class="fn">print</span>(<span class="str">f"Hello <span class="var">{name}</span>, you are <span class="var">{age}</span> years old!"</span>)</div>
+    </div>
+
+    <div class="highlight-box">
+      ⚠️ <strong>Remember:</strong> <code style="font-family:Space Mono,monospace;font-size:0.85em">input()</code> always returns a <strong>string</strong>. If you need a number, wrap it: <code style="font-family:Space Mono,monospace;font-size:0.85em">int(input(...))</code> or <code style="font-family:Space Mono,monospace;font-size:0.85em">float(input(...))</code>
+    </div>
+  </div>
+
+  <!-- ── TERMINAL ── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">⚡</div>
+      <h2>Try it — Live Python Terminal</h2>
+    </div>
+    <p class="prose">Write Python code below and click <strong>Run</strong> to execute it right in your browser.</p>
+
+    <div class="terminal-wrapper">
+      <div class="terminal-header">
+        <div class="terminal-title"><span class="term-dot"></span> Python 3 · Live Terminal</div>
+        <span style="font-family:Space Mono,monospace;font-size:0.7rem;color:var(--text-muted)">Ctrl+Enter to run</span>
+      </div>
+      <div class="terminal-body">
+        <div class="snippet-btns">
+          <button class="snip-btn" onclick="loadSnip('hello')">Hello World</button>
+          <button class="snip-btn" onclick="loadSnip('variable')">Variables</button>
+          <button class="snip-btn" onclick="loadSnip('input')">Input/Output</button>
+          <button class="snip-btn" onclick="loadSnip('comment')">Comments</button>
+        </div>
+        <div id="py-output"># Output will appear here...</div>
+        <div class="terminal-input-row">
+          <span class="term-prompt">&gt;&gt;&gt;</span>
+          <textarea id="py-code" spellcheck="false" placeholder="Type Python code here...">print("Hello, Cairo University!")
+name = "User"
+print(f"Welcome, {name}!")</textarea>
+        </div>
+        <div class="term-btns">
+          <button class="btn-run" onclick="runPython()">▶ Run</button>
+          <button class="btn-clear" onclick="clearTerminal()">✕ Clear</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+ 
+
+  <!-- LECTURE NAVIGATION -->
+  <div class="lec-nav">
+    <span class="lec-nav-spacer"></span>
+    <a href="index.html" class="lec-nav-btn home">⌂ Course Home</a>
+    <a href="lecture2.html" class="lec-nav-btn next">Lecture 02 →</a>
+  </div>
+
+</main>
+
+<script>
+const snippets = {
+  hello: `# Your very first Python program\nprint("Hello, World!")\nprint("Hello, Cairo University!")`,
+  variable: `# Variables - no declaration needed!\nx = 10\nname = "Ahmed"\npi = 3.14\nis_student = True\n\nprint(x, name, pi, is_student)\nprint(type(x))\nprint(type(name))`,
+  input: `# Note: input() simulation\nname = "Youssef"  # imagine user typed this\nage = 22\nprint("Hello,", name)\nprint(f"You are {age} years old")\nprint("In 5 years you'll be", age + 5)`,
+  comment: `# This is a single-line comment\nprint("Comments don't run")  # inline comment\n\n"""\nThis is a\nmulti-line comment\n"""\nprint("After multi-line comment")`
+};
+
+function loadSnip(key) {
+  document.getElementById('py-code').value = snippets[key];
+}
+
+function runPython() {
+  const code = document.getElementById('py-code').value;
+  const out = document.getElementById('py-output');
+  out.className = '';
+  let outText = '';
+
+  function outf(text) { outText += text; }
+  function builtinRead(x) {
+    if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined)
+      throw "File not found: '" + x + "'";
+    return Sk.builtinFiles["files"][x];
+  }
+
+  Sk.configure({ output: outf, read: builtinRead, __future__: Sk.python3 });
+
+  Sk.misceval.asyncToPromise(() => Sk.importMainWithBody("<stdin>", false, code, true))
+    .then(() => {
+      out.textContent = outText || '(no output)';
+      out.className = '';
+    })
+    .catch(e => {
+      out.textContent = e.toString();
+      out.className = 'error';
+    });
+}
+
+function clearTerminal() {
+  document.getElementById('py-output').textContent = '# Output will appear here...';
+  document.getElementById('py-output').className = '';
+  document.getElementById('py-code').value = '';
+}
+
+document.getElementById('py-code').addEventListener('keydown', function(e) {
+  if (e.key === 'Tab') {
+    e.preventDefault();
+    const start = this.selectionStart;
+    this.value = this.value.substring(0, start) + '    ' + this.value.substring(this.selectionEnd);
+    this.selectionStart = this.selectionEnd = start + 4;
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') runPython();
+});
+</script>
+</body>
+</html>
