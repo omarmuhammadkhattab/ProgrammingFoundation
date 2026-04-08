@@ -437,7 +437,7 @@ const snippets = {
   strings: `s = "Cairo University"\nprint(s.lower())\nprint(s.upper())\nprint(len(s))\nprint(s.islower())\nprint(s.replace("Cairo", "Cairo, Egypt"))`,
   slicing: `s = "Python"\nprint(s[0])      # P\nprint(s[-1])     # n\nprint(s[0:3])    # Pyt\nprint(s[:3])     # Pyt\nprint(s[3:])     # hon\nprint(s[::-1])   # reversed`,
   ops: `a = 10\nb = 3\nprint("+ :", a + b)\nprint("- :", a - b)\nprint("* :", a * b)\nprint("/ :", a / b)\nprint("% :", a % b)\nprint("//:", a // b)\nprint("**:", a ** b)\nprint("==:", a == b)\nprint(">: ", a > b)\nprint("and:", a > 5 and b < 10)`,
-  example2: `first = "Salma"\nlast = "Alhagry"\nfull = first + " " + last\nprint("Full name:", full)\nprint("Characters:", len(full))\nprint("Uppercase:", full.upper())`
+  example2: `first = "Firstname"\nlast = "Lastname"\nfull = first + " " + last\nprint("Full name:", full)\nprint("Characters:", len(full))\nprint("Uppercase:", full.upper())`
 };
 function loadSnip(k){document.getElementById('py-code').value=snippets[k];}
 function runPython(){
