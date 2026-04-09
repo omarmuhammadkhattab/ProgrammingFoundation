@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Playground | DS502</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"></script>
+<style>
+:root {
+  --bg:#0b0f1a; --bg2:#111827; --bg3:#1a2236;
+  --py-yellow:#FFD43B; --py-blue:#4584b6; --py-blue-light:#5ba3d9;
+  --text:#e2e8f0; --text-muted:#94a3b8;
+  --border:rgba(255,255,255,0.07);
+  --card-bg:rgba(26,34,54,0.8);
+  --green:#34d399; --red:#f87171; --purple:#a78bfa;
+  --orange:#fb923c; --teal:#2dd4bf;
+  --easy:#34d399; --medium:#FFD43B; --hard:#f87171;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7;overflow-x:hidden;}
+a{text-decoration:none;}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 2.5rem;background:rgba(11,15,26,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-back{display:flex;align-items:center;gap:0.5rem;color:var(--text-muted);font-size:0.9rem;transition:color 0.2s;}
+.nav-back:hover{color:var(--py-yellow);}
+.nav-title{font-family:'Space Mono',monospace;font-size:0.85rem;color:var(--py-yellow);}
+.nav-right{display:flex;align-items:center;gap:1rem;}
+#score-display{font-family:'Space Mono',monospace;font-size:0.8rem;color:var(--text-muted);display:flex;align-items:center;gap:0.4rem;}
+#score-val{color:var(--green);font-weight:700;}
+
+/* HERO */
+.hero{padding:4rem 2rem 2rem;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 0%, rgba(255,212,59,0.07) 0%, transparent 70%);pointer-events:none;}
+.hero-badge{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(255,212,59,0.1);border:1px solid rgba(255,212,59,0.25);color:var(--py-yellow);font-family:'Space Mono',monospace;font-size:0.72rem;padding:0.3rem 1rem;border-radius:100px;margin-bottom:1.5rem;letter-spacing:1px;}
+.hero h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:700;letter-spacing:-2px;line-height:1.1;margin-bottom:1rem;}
+.hero h1 em{font-style:normal;color:var(--py-yellow);}
+.hero p{color:var(--text-muted);font-size:1rem;max-width:520px;margin:0 auto 2rem;}
+
+/* CONTROLS BAR */
+.controls{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:0.8rem;margin-bottom:3rem;padding:0 2rem;}
+.filter-btn{font-family:'Space Mono',monospace;font-size:0.72rem;padding:0.4rem 1rem;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text-muted);cursor:pointer;transition:all 0.2s;}
+.filter-btn:hover,.filter-btn.active{background:rgba(255,212,59,0.1);border-color:rgba(255,212,59,0.4);color:var(--py-yellow);}
+.filter-btn.active{background:rgba(255,212,59,0.12);}
+.sep{width:1px;height:20px;background:var(--border);}
+.shuffle-btn{display:flex;align-items:center;gap:0.5rem;font-family:'Space Mono',monospace;font-size:0.75rem;font-weight:700;padding:0.5rem 1.2rem;border-radius:8px;background:var(--py-yellow);color:#0b0f1a;border:none;cursor:pointer;transition:opacity 0.2s;}
+.shuffle-btn:hover{opacity:0.85;}
+.shuffle-btn svg{transition:transform 0.4s;}
+.shuffle-btn:hover svg{transform:rotate(180deg);}
+.count-label{font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--text-muted);}
+
+/* CHALLENGES GRID */
+.challenges{max-width:1200px;margin:0 auto;padding:0 2rem 6rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(520px,100%),1fr));gap:1.5rem;}
+
+/* CHALLENGE CARD */
+.challenge-card{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:border-color 0.3s;}
+.challenge-card.solved{border-color:rgba(52,211,153,0.35);}
+.card-top{padding:1.4rem 1.5rem 1rem;}
+.card-meta{display:flex;align-items:center;gap:0.6rem;margin-bottom:0.8rem;flex-wrap:wrap;}
+.diff-badge{font-family:'Space Mono',monospace;font-size:0.65rem;font-weight:700;padding:0.2rem 0.6rem;border-radius:100px;letter-spacing:1px;}
+.diff-badge.easy{background:rgba(52,211,153,0.15);color:var(--easy);border:1px solid rgba(52,211,153,0.3);}
+.diff-badge.medium{background:rgba(255,212,59,0.12);color:var(--medium);border:1px solid rgba(255,212,59,0.3);}
+.diff-badge.hard{background:rgba(248,113,113,0.12);color:var(--hard);border:1px solid rgba(248,113,113,0.3);}
+.topic-badge{font-family:'Space Mono',monospace;font-size:0.65rem;padding:0.2rem 0.6rem;border-radius:100px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:var(--text-muted);}
+.solved-badge{font-family:'Space Mono',monospace;font-size:0.65rem;padding:0.2rem 0.6rem;border-radius:100px;background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.3);color:var(--green);display:none;}
+.challenge-card.solved .solved-badge{display:inline-block;}
+.card-q{font-size:1rem;font-weight:700;letter-spacing:-0.3px;margin-bottom:0.5rem;line-height:1.4;}
+.card-desc{font-size:0.87rem;color:var(--text-muted);line-height:1.7;margin-bottom:0;}
+
+/* CODE EDITOR AREA */
+.editor-area{background:#0d1117;border-top:1px solid rgba(255,255,255,0.07);}
+.editor-header{display:flex;align-items:center;justify-content:space-between;padding:0.55rem 1rem;background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.05);}
+.editor-dots{display:flex;gap:5px;}
+.editor-dot{width:9px;height:9px;border-radius:50%;}
+.editor-dot.r{background:#ff5f57;} .editor-dot.y{background:#febc2e;} .editor-dot.g{background:#28c840;}
+.editor-label{font-family:'Space Mono',monospace;font-size:0.65rem;color:var(--text-muted);}
+.code-area{width:100%;background:transparent;border:none;outline:none;resize:none;color:var(--text);font-family:'Space Mono',monospace;font-size:0.8rem;line-height:1.7;padding:1rem 1.2rem;min-height:90px;}
+.output-area{font-family:'Space Mono',monospace;font-size:0.78rem;color:#a3e635;padding:0.8rem 1.2rem;min-height:38px;max-height:140px;overflow-y:auto;white-space:pre-wrap;border-top:1px solid rgba(255,255,255,0.05);line-height:1.6;}
+.output-area.error{color:var(--red);}
+.output-area.empty{color:var(--text-muted);font-style:italic;}
+
+/* CARD ACTIONS */
+.card-actions{display:flex;align-items:center;gap:0.5rem;padding:0.75rem 1rem;border-top:1px solid rgba(255,255,255,0.05);flex-wrap:wrap;}
+.btn-run{font-family:'Space Mono',monospace;font-size:0.72rem;font-weight:700;padding:0.4rem 1rem;border-radius:7px;background:var(--py-yellow);color:#0b0f1a;border:none;cursor:pointer;transition:opacity 0.2s;}
+.btn-run:hover{opacity:0.85;}
+.btn-hint,.btn-solution,.btn-reset{font-family:'Space Mono',monospace;font-size:0.68rem;padding:0.35rem 0.8rem;border-radius:7px;background:transparent;border:1px solid var(--border);color:var(--text-muted);cursor:pointer;transition:all 0.2s;}
+.btn-hint:hover{border-color:var(--teal);color:var(--teal);}
+.btn-solution:hover{border-color:var(--purple);color:var(--purple);}
+.btn-reset:hover{border-color:var(--orange);color:var(--orange);}
+.btn-spacer{flex:1;}
+
+/* HINT / SOLUTION PANELS */
+.hint-panel,.solution-panel{display:none;padding:0.8rem 1.2rem;font-size:0.82rem;line-height:1.7;border-top:1px solid rgba(255,255,255,0.05);}
+.hint-panel{background:rgba(45,212,191,0.04);color:var(--teal);}
+.hint-panel strong{color:var(--teal);}
+.solution-panel{background:rgba(167,139,250,0.04);}
+.solution-panel pre{font-family:'Space Mono',monospace;font-size:0.78rem;color:var(--purple);line-height:1.7;white-space:pre-wrap;word-break:break-word;}
+
+/* EMPTY STATE */
+.empty-state{grid-column:1/-1;text-align:center;padding:4rem 2rem;color:var(--text-muted);}
+.empty-state .icon{font-size:3rem;margin-bottom:1rem;}
+
+/* PROGRESS BAR */
+.progress-bar-wrap{max-width:1200px;margin:0 auto 0.5rem;padding:0 2rem;}
+.progress-bar{height:3px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--teal));border-radius:3px;transition:width 0.5s ease;}
+.progress-label{font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--text-muted);margin-top:0.4rem;text-align:right;}
+
+@keyframes cardIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.challenge-card{animation:cardIn 0.35s ease both;}
+
+@media(max-width:768px){
+  nav{padding:0.8rem 1.2rem;}
+  .hero{padding:3rem 1.2rem 1rem;}
+  .controls{padding:0 1.2rem;}
+  .challenges{padding:0 1rem 4rem;grid-template-columns:1fr;}
+  .code-area{font-size:0.72rem;}
+  .output-area{font-size:0.72rem;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-back" href="index.html">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Back to course
+  </a>
+  <span class="nav-title">DS502</span>
+  <div class="nav-right">
+    <div id="score-display">✓ <span id="score-val">0</span> solved</div>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge">⚡ Python Playground</div>
+  <h1>Test Your <em>Skills</em></h1>
+  <p>Fresh challenges every session. Write real Python code and run it instantly — no setup needed.</p>
+</div>
+
+<div class="controls">
+  <button class="filter-btn active" data-filter="all">All Topics</button>
+  <button class="filter-btn" data-filter="variables">Variables</button>
+  <button class="filter-btn" data-filter="strings">Strings</button>
+  <button class="filter-btn" data-filter="data-structures">Data Structures</button>
+  <button class="filter-btn" data-filter="conditions">Conditions</button>
+  <button class="filter-btn" data-filter="loops">Loops</button>
+  <div class="sep"></div>
+  <button class="filter-btn" data-diff="easy">🟢 Easy</button>
+  <button class="filter-btn" data-diff="medium">🟡 Medium</button>
+  <button class="filter-btn" data-diff="hard">🔴 Hard</button>
+  <div class="sep"></div>
+  <button class="shuffle-btn" id="shuffleBtn">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+    Shuffle
+  </button>
+</div>
+
+<div class="progress-bar-wrap" id="progressWrap" style="display:none">
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  <div class="progress-label" id="progressLabel"></div>
+</div>
+
+<div class="challenges" id="challengesGrid"></div>
+
+<script>
+// ─────────────────────────────────────────────
+// QUESTION BANK  (42 questions)
+// ─────────────────────────────────────────────
+const QUESTIONS = [
+  // ── VARIABLES ──
+  {
+    id:'v1', topic:'variables', diff:'easy',
+    title:'Swap Two Variables',
+    desc:'Given <code>a = 10</code> and <code>b = 20</code>, swap their values without using a third variable. Print both values after swapping.',
+    starter:'a = 10\nb = 20\n# Your code here\n\nprint("a =", a)\nprint("b =", b)',
+    hint:'Python lets you swap in one line: <code>a, b = b, a</code>',
+    solution:'a = 10\nb = 20\na, b = b, a\nprint("a =", a)\nprint("b =", b)'
+  },
+  {
+    id:'v2', topic:'variables', diff:'easy',
+    title:'Celsius to Fahrenheit',
+    desc:'Convert a temperature from Celsius to Fahrenheit using the formula: <b>F = (C × 9/5) + 32</b>. Use <code>celsius = 25</code>.',
+    starter:'celsius = 25\n# Calculate fahrenheit\n\nprint(f"{celsius}°C = {fahrenheit}°F")',
+    hint:'fahrenheit = (celsius * 9/5) + 32',
+    solution:'celsius = 25\nfahrenheit = (celsius * 9/5) + 32\nprint(f"{celsius}°C = {fahrenheit}°F")'
+  },
+  {
+    id:'v3', topic:'variables', diff:'easy',
+    title:'Area of a Circle',
+    desc:'Calculate the area of a circle with radius <code>r = 7</code>. Use <code>pi = 3.14159</code>. Formula: <b>A = π × r²</b>',
+    starter:'r = 7\npi = 3.14159\n# Calculate area\n\nprint(f"Area = {area:.2f}")',
+    hint:'area = pi * r ** 2',
+    solution:'r = 7\npi = 3.14159\narea = pi * r ** 2\nprint(f"Area = {area:.2f}")'
+  },
+  {
+    id:'v4', topic:'variables', diff:'medium',
+    title:'Quotient and Remainder',
+    desc:'Given <code>a = 17</code> and <code>b = 5</code>, print the quotient (integer division) and remainder separately.',
+    starter:'a = 17\nb = 5\n# Your code here',
+    hint:'Use <code>//</code> for floor division and <code>%</code> for remainder.',
+    solution:'a = 17\nb = 5\nprint("Quotient:", a // b)\nprint("Remainder:", a % b)'
+  },
+
+  // ── STRINGS ──
+  {
+    id:'s1', topic:'strings', diff:'easy',
+    title:'Reverse a String',
+    desc:'Given the string <code>s = "Python"</code>, print it reversed using slicing.',
+    starter:'s = "Python"\n# Reverse s\n\nprint(reversed_s)',
+    hint:'Slicing with <code>[::-1]</code> reverses any sequence.',
+    solution:'s = "Python"\nreversed_s = s[::-1]\nprint(reversed_s)'
+  },
+  {
+    id:'s2', topic:'strings', diff:'easy',
+    title:'Count Vowels',
+    desc:'Count the number of vowels (a, e, i, o, u) in the string <code>"Cairo University"</code>. Print the count.',
+    starter:'text = "Cairo University"\ncount = 0\n# Count the vowels\n\nprint("Vowels:", count)',
+    hint:'Loop through each character and check if it\'s in <code>"aeiouAEIOU"</code>.',
+    solution:'text = "Cairo University"\ncount = 0\nfor ch in text:\n    if ch in "aeiouAEIOU":\n        count += 1\nprint("Vowels:", count)'
+  },
+  {
+    id:'s3', topic:'strings', diff:'medium',
+    title:'Title Case Converter',
+    desc:'Take the string <code>"python is amazing"</code> and convert it so the first letter of every word is capitalized. Do it manually using a loop (not <code>.title()</code>).',
+    starter:'text = "python is amazing"\nresult = ""\n# Your code here\n\nprint(result)',
+    hint:'Split the string into words, capitalize the first letter of each with <code>word[0].upper() + word[1:]</code>, then join them back.',
+    solution:'text = "python is amazing"\nwords = text.split()\nresult = " ".join(w[0].upper() + w[1:] for w in words)\nprint(result)'
+  },
+  {
+    id:'s4', topic:'strings', diff:'medium',
+    title:'Palindrome Check',
+    desc:'Check if the string <code>"racecar"</code> is a palindrome (reads the same forwards and backwards). Print True or False.',
+    starter:'s = "racecar"\n# Check if palindrome\n\nprint(is_palindrome)',
+    hint:'Compare the string to its reverse: <code>s == s[::-1]</code>',
+    solution:'s = "racecar"\nis_palindrome = s == s[::-1]\nprint(is_palindrome)'
+  },
+  {
+    id:'s5', topic:'strings', diff:'medium',
+    title:'Remove Duplicates from String',
+    desc:'Given <code>s = "programming"</code>, print the string with duplicate characters removed while keeping the original order.',
+    starter:'s = "programming"\nresult = ""\n# Your code here\n\nprint(result)',
+    hint:'Loop through the string and only add a character to result if it hasn\'t appeared yet.',
+    solution:'s = "programming"\nresult = ""\nfor ch in s:\n    if ch not in result:\n        result += ch\nprint(result)'
+  },
+  {
+    id:'s6', topic:'strings', diff:'hard',
+    title:'Caesar Cipher',
+    desc:'Encode the string <code>"hello"</code> using a Caesar cipher with shift <code>3</code> (each letter shifted 3 places forward: h→k, e→h, etc.).',
+    starter:'text = "hello"\nshift = 3\nresult = ""\n# Your code here\n\nprint(result)',
+    hint:'Use <code>ord()</code> to get a character\'s ASCII value and <code>chr()</code> to convert back. For lowercase: <code>chr((ord(ch) - ord("a") + shift) % 26 + ord("a"))</code>',
+    solution:'text = "hello"\nshift = 3\nresult = ""\nfor ch in text:\n    if ch.isalpha():\n        base = ord("a") if ch.islower() else ord("A")\n        result += chr((ord(ch) - base + shift) % 26 + base)\n    else:\n        result += ch\nprint(result)'
+  },
+
+  // ── DATA STRUCTURES ──
+  {
+    id:'d1', topic:'data-structures', diff:'easy',
+    title:'List Sum & Average',
+    desc:'Given <code>nums = [4, 8, 15, 16, 23, 42]</code>, calculate and print the sum and the average.',
+    starter:'nums = [4, 8, 15, 16, 23, 42]\n# Calculate sum and average\n\nprint("Sum:", total)\nprint("Average:", avg)',
+    hint:'Use <code>sum()</code> and <code>len()</code>, or loop through the list.',
+    solution:'nums = [4, 8, 15, 16, 23, 42]\ntotal = sum(nums)\navg = total / len(nums)\nprint("Sum:", total)\nprint("Average:", avg)'
+  },
+  {
+    id:'d2', topic:'data-structures', diff:'easy',
+    title:'Remove Duplicates from List',
+    desc:'Given <code>nums = [1, 2, 2, 3, 4, 3, 5]</code>, remove all duplicates and print the unique values.',
+    starter:'nums = [1, 2, 2, 3, 4, 3, 5]\n# Remove duplicates\n\nprint(unique)',
+    hint:'Convert to a set and back to a list: <code>list(set(nums))</code>',
+    solution:'nums = [1, 2, 2, 3, 4, 3, 5]\nunique = list(set(nums))\nprint(unique)'
+  },
+  {
+    id:'d3', topic:'data-structures', diff:'medium',
+    title:'Second Largest Number',
+    desc:'Find the second largest number in the list <code>[12, 35, 1, 10, 34, 1]</code> without using sort().',
+    starter:'nums = [12, 35, 1, 10, 34, 1]\n# Find second largest\n\nprint("Second largest:", second)',
+    hint:'Keep track of the two largest numbers as you loop: update <code>first</code> and <code>second</code> on each iteration.',
+    solution:'nums = [12, 35, 1, 10, 34, 1]\nfirst = second = float("-inf")\nfor n in nums:\n    if n > first:\n        second = first\n        first = n\n    elif n > second and n != first:\n        second = n\nprint("Second largest:", second)'
+  },
+  {
+    id:'d4', topic:'data-structures', diff:'easy',
+    title:'Dictionary Word Count',
+    desc:'Count how many times each word appears in <code>"the cat sat on the mat the cat"</code>. Store counts in a dictionary and print it.',
+    starter:'sentence = "the cat sat on the mat the cat"\ncounts = {}\n# Count each word\n\nprint(counts)',
+    hint:'Split the sentence into words, then for each word: <code>counts[word] = counts.get(word, 0) + 1</code>',
+    solution:'sentence = "the cat sat on the mat the cat"\ncounts = {}\nfor word in sentence.split():\n    counts[word] = counts.get(word, 0) + 1\nprint(counts)'
+  },
+  {
+    id:'d5', topic:'data-structures', diff:'medium',
+    title:'Flatten a Nested List',
+    desc:'Flatten <code>[[1, 2], [3, 4], [5, 6]]</code> into a single list <code>[1, 2, 3, 4, 5, 6]</code> using a loop.',
+    starter:'nested = [[1, 2], [3, 4], [5, 6]]\nflat = []\n# Flatten the list\n\nprint(flat)',
+    hint:'Use a nested loop: outer for each sublist, inner for each element in the sublist.',
+    solution:'nested = [[1, 2], [3, 4], [5, 6]]\nflat = []\nfor sublist in nested:\n    for item in sublist:\n        flat.append(item)\nprint(flat)'
+  },
+  {
+    id:'d6', topic:'data-structures', diff:'medium',
+    title:'Invert a Dictionary',
+    desc:'Given <code>{"a": 1, "b": 2, "c": 3}</code>, create an inverted dictionary where keys and values are swapped: <code>{1: "a", 2: "b", 3: "c"}</code>.',
+    starter:'d = {"a": 1, "b": 2, "c": 3}\ninverted = {}\n# Invert the dictionary\n\nprint(inverted)',
+    hint:'Loop through <code>d.items()</code> and swap: <code>inverted[v] = k</code>',
+    solution:'d = {"a": 1, "b": 2, "c": 3}\ninverted = {}\nfor k, v in d.items():\n    inverted[v] = k\nprint(inverted)'
+  },
+  {
+    id:'d7', topic:'data-structures', diff:'hard',
+    title:'Group by First Letter',
+    desc:'Given <code>words = ["apple","avocado","banana","blueberry","cherry","cranberry"]</code>, group them into a dictionary by their first letter.',
+    starter:'words = ["apple","avocado","banana","blueberry","cherry","cranberry"]\ngrouped = {}\n# Group by first letter\n\nprint(grouped)',
+    hint:'For each word, use <code>word[0]</code> as the key. If the key doesn\'t exist yet, set it to an empty list first, then append.',
+    solution:'words = ["apple","avocado","banana","blueberry","cherry","cranberry"]\ngrouped = {}\nfor word in words:\n    key = word[0]\n    if key not in grouped:\n        grouped[key] = []\n    grouped[key].append(word)\nprint(grouped)'
+  },
+
+  // ── CONDITIONS ──
+  {
+    id:'c1', topic:'conditions', diff:'easy',
+    title:'Leap Year Checker',
+    desc:'Check if the year <code>2024</code> is a leap year. A year is a leap year if it\'s divisible by 4, but not by 100 — unless it\'s also divisible by 400.',
+    starter:'year = 2024\n# Check leap year\n\nprint(f"{year} is a leap year:", is_leap)',
+    hint:'if (year % 4 == 0 and year % 100 != 0) or (year % 400 == 0)',
+    solution:'year = 2024\nis_leap = (year % 4 == 0 and year % 100 != 0) or (year % 400 == 0)\nprint(f"{year} is a leap year:", is_leap)'
+  },
+  {
+    id:'c2', topic:'conditions', diff:'easy',
+    title:'Triangle Type',
+    desc:'Given sides <code>a=5, b=5, c=8</code>, determine if the triangle is Equilateral (all sides equal), Isosceles (two sides equal), or Scalene (all different).',
+    starter:'a, b, c = 5, 5, 8\n# Determine triangle type\n\nprint("Triangle type:", triangle_type)',
+    hint:'Check <code>a==b==c</code> first, then <code>a==b or b==c or a==c</code>, else Scalene.',
+    solution:'a, b, c = 5, 5, 8\nif a == b == c:\n    triangle_type = "Equilateral"\nelif a == b or b == c or a == c:\n    triangle_type = "Isosceles"\nelse:\n    triangle_type = "Scalene"\nprint("Triangle type:", triangle_type)'
+  },
+  {
+    id:'c3', topic:'conditions', diff:'medium',
+    title:'BMI Calculator',
+    desc:'Calculate BMI using <code>weight = 70</code> (kg) and <code>height = 1.75</code> (m). Formula: <b>BMI = weight / height²</b>. Print the BMI and category: Underweight (<18.5), Normal (18.5–24.9), Overweight (25–29.9), Obese (≥30).',
+    starter:'weight = 70\nheight = 1.75\n# Calculate BMI and category\n\nprint(f"BMI: {bmi:.1f} - {category}")',
+    hint:'bmi = weight / (height ** 2), then use if/elif/else to assign the category.',
+    solution:'weight = 70\nheight = 1.75\nbmi = weight / (height ** 2)\nif bmi < 18.5:\n    category = "Underweight"\nelif bmi < 25:\n    category = "Normal"\nelif bmi < 30:\n    category = "Overweight"\nelse:\n    category = "Obese"\nprint(f"BMI: {bmi:.1f} - {category}")'
+  },
+  {
+    id:'c4', topic:'conditions', diff:'medium',
+    title:'Rock Paper Scissors',
+    desc:'Given <code>player = "rock"</code> and <code>computer = "scissors"</code>, print who wins (or "Draw").',
+    starter:'player = "rock"\ncomputer = "scissors"\n# Determine winner\n\nprint(result)',
+    hint:'Check all winning combinations: rock beats scissors, scissors beats paper, paper beats rock.',
+    solution:'player = "rock"\ncomputer = "scissors"\nif player == computer:\n    result = "Draw!"\nelif (player=="rock" and computer=="scissors") or \\\n     (player=="scissors" and computer=="paper") or \\\n     (player=="paper" and computer=="rock"):\n    result = "Player wins!"\nelse:\n    result = "Computer wins!"\nprint(result)'
+  },
+  {
+    id:'c5', topic:'conditions', diff:'hard',
+    title:'Tax Bracket Calculator',
+    desc:'Calculate income tax for <code>income = 85000</code>. Brackets: 0–20000 → 0%, 20001–50000 → 10%, 50001–100000 → 20%, above 100000 → 30%. Each bracket applies only to the income within that range.',
+    starter:'income = 85000\ntax = 0\n# Calculate total tax\n\nprint(f"Income: {income}")\nprint(f"Tax: {tax}")',
+    hint:'Calculate tax for each bracket separately. For example if income is 85000: 0 tax on first 20000, 10% on next 30000, 20% on remaining 35000.',
+    solution:'income = 85000\ntax = 0\nif income > 100000:\n    tax += (income - 100000) * 0.30\n    income = 100000\nif income > 50000:\n    tax += (income - 50000) * 0.20\n    income = 50000\nif income > 20000:\n    tax += (income - 20000) * 0.10\nprint(f"Income: 85000")\nprint(f"Tax: {tax}")'
+  },
+
+  // ── LOOPS ──
+  {
+    id:'l1', topic:'loops', diff:'easy',
+    title:'Multiplication Table',
+    desc:'Print the multiplication table for <code>n = 7</code> (from 7×1 to 7×10).',
+    starter:'n = 7\n# Print multiplication table\n',
+    hint:'Use a for loop with range(1, 11) and print n * i each iteration.',
+    solution:'n = 7\nfor i in range(1, 11):\n    print(f"{n} x {i} = {n*i}")'
+  },
+  {
+    id:'l2', topic:'loops', diff:'easy',
+    title:'Sum of Digits',
+    desc:'Calculate the sum of all digits in the number <code>n = 94856</code>. Expected: 9+4+8+5+6 = 32.',
+    starter:'n = 94856\ntotal = 0\n# Sum the digits\n\nprint("Sum of digits:", total)',
+    hint:'Convert n to a string, loop through each character, convert back to int and add to total.',
+    solution:'n = 94856\ntotal = 0\nfor digit in str(n):\n    total += int(digit)\nprint("Sum of digits:", total)'
+  },
+  {
+    id:'l3', topic:'loops', diff:'easy',
+    title:'FizzBuzz',
+    desc:'Print numbers 1–30. For multiples of 3 print "Fizz", for multiples of 5 print "Buzz", for multiples of both print "FizzBuzz".',
+    starter:'for i in range(1, 31):\n    # Your code here\n    pass',
+    hint:'Check divisibility in the right order: FizzBuzz first (% 3 == 0 and % 5 == 0), then Fizz, then Buzz, else the number.',
+    solution:'for i in range(1, 31):\n    if i % 3 == 0 and i % 5 == 0:\n        print("FizzBuzz")\n    elif i % 3 == 0:\n        print("Fizz")\n    elif i % 5 == 0:\n        print("Buzz")\n    else:\n        print(i)'
+  },
+  {
+    id:'l4', topic:'loops', diff:'medium',
+    title:'Find Prime Numbers',
+    desc:'Print all prime numbers between 2 and 50 using a nested loop.',
+    starter:'# Print all primes between 2 and 50\n',
+    hint:'For each number n, check if any number from 2 to n-1 divides it evenly. If none do, it\'s prime.',
+    solution:'for n in range(2, 51):\n    is_prime = True\n    for i in range(2, n):\n        if n % i == 0:\n            is_prime = False\n            break\n    if is_prime:\n        print(n, end=" ")'
+  },
+  {
+    id:'l5', topic:'loops', diff:'medium',
+    title:'Pattern Printer',
+    desc:'Print the following right-triangle star pattern for <code>n = 5</code> rows:\n<pre style="font-family:monospace;color:#94a3b8;margin-top:0.4rem">*\n* *\n* * *\n* * * *\n* * * * *</pre>',
+    starter:'n = 5\n# Print the pattern\n',
+    hint:'Use a nested loop or multiply a string: <code>print("* " * i)</code> where i goes from 1 to n.',
+    solution:'n = 5\nfor i in range(1, n+1):\n    print("* " * i)'
+  },
+  {
+    id:'l6', topic:'loops', diff:'medium',
+    title:'Collatz Sequence',
+    desc:'Starting from <code>n = 27</code>, apply the Collatz rule: if n is even divide by 2, if odd multiply by 3 and add 1. Repeat until n = 1. Count and print each step.',
+    starter:'n = 27\nsteps = 0\n# Apply Collatz until n == 1\n\nprint(f"Reached 1 in {steps} steps")',
+    hint:'Use a while loop: while n != 1. Apply the rule and increment steps each iteration.',
+    solution:'n = 27\nsteps = 0\nwhile n != 1:\n    if n % 2 == 0:\n        n = n // 2\n    else:\n        n = n * 3 + 1\n    steps += 1\nprint(f"Reached 1 in {steps} steps")'
+  },
+  {
+    id:'l7', topic:'loops', diff:'medium',
+    title:'Fibonacci Sequence',
+    desc:'Print the first <code>10</code> numbers of the Fibonacci sequence (0, 1, 1, 2, 3, 5, 8, 13, 21, 34).',
+    starter:'n = 10\na, b = 0, 1\n# Print first n Fibonacci numbers\n',
+    hint:'Start with a=0, b=1. Each iteration: print a, then update with a, b = b, a+b.',
+    solution:'n = 10\na, b = 0, 1\nfor _ in range(n):\n    print(a, end=" ")\n    a, b = b, a + b'
+  },
+  {
+    id:'l8', topic:'loops', diff:'hard',
+    title:'Number Pyramid',
+    desc:'Print this number pyramid for <code>n = 5</code>:\n<pre style="font-family:monospace;color:#94a3b8;margin-top:0.4rem">    1\n   2 2\n  3 3 3\n 4 4 4 4\n5 5 5 5 5</pre>',
+    starter:'n = 5\n# Print the number pyramid\n',
+    hint:'For row i, print (n-i) spaces followed by the number i repeated i times.',
+    solution:'n = 5\nfor i in range(1, n+1):\n    spaces = " " * (n - i)\n    nums = (str(i) + " ") * i\n    print(spaces + nums.rstrip())'
+  },
+  {
+    id:'l9', topic:'loops', diff:'hard',
+    title:'Count Even/Odd in List',
+    desc:'Given <code>nums = [1,4,9,16,25,36,49,64,81,100]</code>, count and print how many are even and how many are odd.',
+    starter:'nums = [1,4,9,16,25,36,49,64,81,100]\neven_count = 0\nodd_count = 0\n# Count even and odd\n\nprint("Even:", even_count)\nprint("Odd:", odd_count)',
+    hint:'Loop through the list, use <code>n % 2 == 0</code> to check even.',
+    solution:'nums = [1,4,9,16,25,36,49,64,81,100]\neven_count = 0\nodd_count = 0\nfor n in nums:\n    if n % 2 == 0:\n        even_count += 1\n    else:\n        odd_count += 1\nprint("Even:", even_count)\nprint("Odd:", odd_count)'
+  },
+  {
+    id:'l10', topic:'loops', diff:'hard',
+    title:'Matrix Transpose',
+    desc:'Transpose the matrix <code>[[1,2,3],[4,5,6],[7,8,9]]</code> — rows become columns. Print each row of the result.',
+    starter:'matrix = [[1,2,3],[4,5,6],[7,8,9]]\ntransposed = []\n# Transpose the matrix\n\nfor row in transposed:\n    print(row)',
+    hint:'Build the transposed matrix with nested loops: outer loop over columns (0..2), inner loop over rows (0..2), collect <code>matrix[j][i]</code>.',
+    solution:'matrix = [[1,2,3],[4,5,6],[7,8,9]]\ntransposed = []\nfor i in range(3):\n    row = []\n    for j in range(3):\n        row.append(matrix[j][i])\n    transposed.append(row)\nfor row in transposed:\n    print(row)'
+  },
+  {
+    id:'l11', topic:'loops', diff:'medium',
+    title:'Guess the Number (Simulation)',
+    desc:'Simulate a number guessing game. The secret number is <code>42</code>. Check a list of guesses <code>[10, 70, 42, 55]</code> one by one and stop when you find it.',
+    starter:'secret = 42\nguesses = [10, 70, 42, 55]\n# Check guesses until found\n',
+    hint:'Use a for loop with an if check. Print "Too low", "Too high", or "Correct!" and break when found.',
+    solution:'secret = 42\nguesses = [10, 70, 42, 55]\nfor guess in guesses:\n    if guess < secret:\n        print(f"{guess} - Too low")\n    elif guess > secret:\n        print(f"{guess} - Too high")\n    else:\n        print(f"{guess} - Correct!")\n        break'
+  },
+  {
+    id:'l12', topic:'loops', diff:'medium',
+    title:'Skip Multiples of 3',
+    desc:'Print numbers from 1 to 20, but skip any that are a multiple of 3. Use <code>continue</code>.',
+    starter:'# Print 1-20, skip multiples of 3\n',
+    hint:'Use <code>if i % 3 == 0: continue</code> inside your for loop.',
+    solution:'for i in range(1, 21):\n    if i % 3 == 0:\n        continue\n    print(i, end=" ")'
+  },
+
+  // ── MIXED / CHALLENGE ──
+  {
+    id:'m1', topic:'loops', diff:'hard',
+    title:'Longest Word in Sentence',
+    desc:'Find the longest word in <code>"the quick brown fox jumped over the lazy dog"</code>. Print the word and its length.',
+    starter:'sentence = "the quick brown fox jumped over the lazy dog"\n# Find the longest word\n\nprint(f"Longest: \'{longest}\' ({length} chars)")',
+    hint:'Split the sentence, loop through words tracking the longest so far.',
+    solution:'sentence = "the quick brown fox jumped over the lazy dog"\nlongest = ""\nfor word in sentence.split():\n    if len(word) > len(longest):\n        longest = word\nlength = len(longest)\nprint(f"Longest: \'{longest}\' ({length} chars)")'
+  },
+  {
+    id:'m2', topic:'data-structures', diff:'hard',
+    title:'Two Sum Problem',
+    desc:'Given <code>nums = [2, 7, 11, 15]</code> and <code>target = 9</code>, find two numbers that add up to the target and print their indices.',
+    starter:'nums = [2, 7, 11, 15]\ntarget = 9\n# Find two indices that sum to target\n',
+    hint:'Use a nested loop: for each pair (i, j) where j > i, check if nums[i] + nums[j] == target.',
+    solution:'nums = [2, 7, 11, 15]\ntarget = 9\nfor i in range(len(nums)):\n    for j in range(i+1, len(nums)):\n        if nums[i] + nums[j] == target:\n            print(f"Indices: {i} and {j} ({nums[i]} + {nums[j]} = {target})")'
+  },
+  {
+    id:'m3', topic:'strings', diff:'hard',
+    title:'Anagram Checker',
+    desc:'Check if <code>"listen"</code> and <code>"silent"</code> are anagrams (contain the same letters in any order).',
+    starter:'s1 = "listen"\ns2 = "silent"\n# Check if anagram\n\nprint(f\'"{s1}" and "{s2}" are anagrams:\', result)',
+    hint:'Two strings are anagrams if their sorted characters are equal: <code>sorted(s1) == sorted(s2)</code>',
+    solution:'s1 = "listen"\ns2 = "silent"\nresult = sorted(s1) == sorted(s2)\nprint(f\'"{s1}" and "{s2}" are anagrams:\', result)'
+  },
+  {
+    id:'m4', topic:'conditions', diff:'medium',
+    title:'Simple ATM',
+    desc:'Simulate an ATM. Balance is <code>1500</code>. Withdrawal amount is <code>200</code>. Print the new balance if sufficient funds, otherwise print "Insufficient funds".',
+    starter:'balance = 1500\nwithdrawal = 200\n# Check and process withdrawal\n',
+    hint:'if withdrawal <= balance: subtract and print new balance, else print error.',
+    solution:'balance = 1500\nwithdrawal = 200\nif withdrawal <= balance:\n    balance -= withdrawal\n    print(f"Withdrawal successful. New balance: {balance}")\nelse:\n    print("Insufficient funds")'
+  },
+];
+
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+const CARDS_PER_SESSION = 6;
+let activeFilter  = 'all';
+let activeDiff    = 'all';
+let currentPool   = [];
+let solvedIds     = new Set(JSON.parse(localStorage.getItem('ds502_solved') || '[]'));
+
+function saveSolved() {
+  try { localStorage.setItem('ds502_solved', JSON.stringify([...solvedIds])); } catch(e){}
+}
+
+// ─────────────────────────────────────────────
+// FILTER & SHUFFLE
+// ─────────────────────────────────────────────
+function getFiltered() {
+  return QUESTIONS.filter(q => {
+    const topicMatch = activeFilter === 'all' || q.topic === activeFilter;
+    const diffMatch  = activeDiff  === 'all' || q.diff  === activeDiff;
+    return topicMatch && diffMatch;
+  });
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function pickChallenges() {
+  const pool = getFiltered();
+  return shuffle(pool).slice(0, CARDS_PER_SESSION);
+}
+
+// ─────────────────────────────────────────────
+// RENDER
+// ─────────────────────────────────────────────
+function render(questions) {
+  currentPool = questions;
+  const grid = document.getElementById('challengesGrid');
+  grid.innerHTML = '';
+
+  if (!questions.length) {
+    grid.innerHTML = '<div class="empty-state"><div class="icon">🔍</div><p>No challenges match your filters. Try a different combination!</p></div>';
+    updateProgress();
+    return;
+  }
+
+  questions.forEach((q, idx) => {
+    const isSolved = solvedIds.has(q.id);
+    const card = document.createElement('div');
+    card.className = 'challenge-card' + (isSolved ? ' solved' : '');
+    card.id = 'card-' + q.id;
+    card.style.animationDelay = (idx * 0.06) + 's';
+
+    // Escape starter for textarea
+    const safeStarter = q.starter.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+    card.innerHTML = `
+      <div class="card-top">
+        <div class="card-meta">
+          <span class="diff-badge ${q.diff}">${q.diff.toUpperCase()}</span>
+          <span class="topic-badge">${q.topic}</span>
+          <span class="solved-badge">✓ SOLVED</span>
+        </div>
+        <div class="card-q">${q.title}</div>
+        <div class="card-desc">${q.desc}</div>
+      </div>
+      <div class="editor-area">
+        <div class="editor-header">
+          <div class="editor-dots"><div class="editor-dot r"></div><div class="editor-dot y"></div><div class="editor-dot g"></div></div>
+          <span class="editor-label">Python 3</span>
+        </div>
+        <textarea class="code-area" id="code-${q.id}" spellcheck="false">${q.starter}</textarea>
+        <div class="output-area empty" id="out-${q.id}">▶ Press Run to see output</div>
+      </div>
+      <div class="card-actions">
+        <button class="btn-run" onclick="runCard('${q.id}')">▶ Run</button>
+        <button class="btn-hint"     onclick="togglePanel('hint-${q.id}')">💡 Hint</button>
+        <button class="btn-solution" onclick="togglePanel('sol-${q.id}')">👁 Solution</button>
+        <span class="btn-spacer"></span>
+        <button class="btn-reset"    onclick="resetCard('${q.id}')">↺ Reset</button>
+      </div>
+      <div class="hint-panel" id="hint-${q.id}"><strong>Hint:</strong> ${q.hint}</div>
+      <div class="solution-panel" id="sol-${q.id}"><pre>${q.solution}</pre></div>
+    `;
+    grid.appendChild(card);
+
+    // Tab key in textarea
+    const ta = card.querySelector('.code-area');
+    ta.addEventListener('keydown', function(e) {
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        const s = this.selectionStart;
+        this.value = this.value.substring(0, s) + '    ' + this.value.substring(this.selectionEnd);
+        this.selectionStart = this.selectionEnd = s + 4;
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') runCard(q.id);
+    });
+  });
+
+  updateProgress();
+}
+
+function togglePanel(id) {
+  const el = document.getElementById(id);
+  el.style.display = el.style.display === 'block' ? 'none' : 'block';
+}
+
+function resetCard(qid) {
+  const q = QUESTIONS.find(x => x.id === qid);
+  if (!q) return;
+  document.getElementById('code-' + qid).value = q.starter;
+  const out = document.getElementById('out-' + qid);
+  out.textContent = '▶ Press Run to see output';
+  out.className = 'output-area empty';
+}
+
+function updateProgress() {
+  const total   = currentPool.length;
+  const solved  = currentPool.filter(q => solvedIds.has(q.id)).length;
+  const wrap    = document.getElementById('progressWrap');
+  const fill    = document.getElementById('progressFill');
+  const label   = document.getElementById('progressLabel');
+  const scoreEl = document.getElementById('score-val');
+
+  scoreEl.textContent = solvedIds.size;
+
+  if (total === 0) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'block';
+  fill.style.width = (solved / total * 100) + '%';
+  label.textContent = solved + ' / ' + total + ' challenges solved';
+}
+
+// ─────────────────────────────────────────────
+// RUN PYTHON (Skulpt)
+// ─────────────────────────────────────────────
+function runCard(qid) {
+  const code = document.getElementById('code-' + qid).value;
+  const out  = document.getElementById('out-' + qid);
+  out.className = 'output-area';
+  out.textContent = 'Running…';
+
+  let outText = '';
+  function outf(t) { outText += t; }
+  function builtinRead(x) {
+    if (Sk.builtinFiles === undefined || Sk.builtinFiles['files'][x] === undefined)
+      throw "File not found: '" + x + "'";
+    return Sk.builtinFiles['files'][x];
+  }
+
+  Sk.configure({ output: outf, read: builtinRead, __future__: Sk.python3 });
+  Sk.misceval.asyncToPromise(function() {
+    return Sk.importMainWithBody('<stdin>', false, code, true);
+  }).then(function() {
+    out.textContent = outText || '(no output)';
+    out.className = 'output-area';
+    // Mark as solved if there's output and no error
+    if (outText.trim() && !solvedIds.has(qid)) {
+      solvedIds.add(qid);
+      saveSolved();
+      const card = document.getElementById('card-' + qid);
+      if (card) card.classList.add('solved');
+      updateProgress();
+    }
+  }).catch(function(e) {
+    out.textContent = e.toString();
+    out.className = 'output-area error';
+  });
+}
+
+// ─────────────────────────────────────────────
+// FILTERS & SHUFFLE
+// ─────────────────────────────────────────────
+document.querySelectorAll('.filter-btn[data-filter]').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.filter-btn[data-filter]').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    activeFilter = this.dataset.filter;
+    render(pickChallenges());
+  });
+});
+
+document.querySelectorAll('.filter-btn[data-diff]').forEach(btn => {
+  btn.addEventListener('click', function() {
+    if (this.classList.contains('active')) {
+      this.classList.remove('active');
+      activeDiff = 'all';
+    } else {
+      document.querySelectorAll('.filter-btn[data-diff]').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      activeDiff = this.dataset.diff;
+    }
+    render(pickChallenges());
+  });
+});
+
+document.getElementById('shuffleBtn').addEventListener('click', function() {
+  render(pickChallenges());
+});
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+render(pickChallenges());
+</script>
+</body>
+</html>
