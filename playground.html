@@ -5,8 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Python Playground</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- CodeMirror 5 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/comment/comment.min.js"></script>
+
+<!-- Skulpt Python runtime -->
 <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"></script>
+
 <style>
 :root {
   --bg:#0b0f1a; --bg2:#111827; --bg3:#1a2236;
@@ -50,10 +62,9 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 .shuffle-btn:hover{opacity:0.85;}
 .shuffle-btn svg{transition:transform 0.4s;}
 .shuffle-btn:hover svg{transform:rotate(180deg);}
-.count-label{font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--text-muted);}
 
 /* CHALLENGES GRID */
-.challenges{max-width:1200px;margin:0 auto;padding:0 2rem 6rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(520px,100%),1fr));gap:1.5rem;}
+.challenges{max-width:1200px;margin:0 auto;padding:0 2rem 6rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(560px,100%),1fr));gap:1.5rem;}
 
 /* CHALLENGE CARD */
 .challenge-card{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:border-color 0.3s;}
@@ -70,22 +81,61 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 .card-q{font-size:1rem;font-weight:700;letter-spacing:-0.3px;margin-bottom:0.5rem;line-height:1.4;}
 .card-desc{font-size:0.87rem;color:var(--text-muted);line-height:1.7;margin-bottom:0;}
 
-/* CODE EDITOR AREA */
-.editor-area{background:#0d1117;border-top:1px solid rgba(255,255,255,0.07);}
-.editor-header{display:flex;align-items:center;justify-content:space-between;padding:0.55rem 1rem;background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.05);}
+/* ── CODEMIRROR EDITOR ── */
+.editor-area{background:#282a36;border-top:1px solid rgba(255,255,255,0.07);}
+
+.editor-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0.55rem 1rem;
+  background:rgba(0,0,0,0.25);
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
 .editor-dots{display:flex;gap:5px;}
 .editor-dot{width:9px;height:9px;border-radius:50%;}
 .editor-dot.r{background:#ff5f57;} .editor-dot.y{background:#febc2e;} .editor-dot.g{background:#28c840;}
-.editor-label{font-family:'Space Mono',monospace;font-size:0.65rem;color:var(--text-muted);}
-.code-area{width:100%;background:transparent;border:none;outline:none;resize:none;color:var(--text);font-family:'Space Mono',monospace;font-size:0.8rem;line-height:1.7;padding:1rem 1.2rem;min-height:90px;}
-.output-area{font-family:'Space Mono',monospace;font-size:0.78rem;color:#a3e635;padding:0.8rem 1.2rem;min-height:38px;max-height:140px;overflow-y:auto;white-space:pre-wrap;border-top:1px solid rgba(255,255,255,0.05);line-height:1.6;}
+.editor-label{font-family:'Space Mono',monospace;font-size:0.65rem;color:#6272a4;}
+.editor-shortcut{font-family:'Space Mono',monospace;font-size:0.62rem;color:#6272a4;letter-spacing:0.5px;}
+
+/* Make CodeMirror fill the card and use our theme */
+.CodeMirror{
+  height:auto !important;
+  min-height:100px;
+  max-height:300px;
+  font-family:'Space Mono',monospace !important;
+  font-size:0.8rem !important;
+  line-height:1.7 !important;
+  background:#282a36 !important;
+  color:#f8f8f2 !important;
+  border:none !important;
+}
+.CodeMirror-scroll{overflow-y:auto !important;overflow-x:auto !important;}
+.CodeMirror-gutters{background:#21222c !important;border-right:1px solid rgba(255,255,255,0.06) !important;}
+.CodeMirror-linenumber{color:#6272a4 !important;font-size:0.72rem !important;padding:0 8px 0 6px !important;}
+.CodeMirror-cursor{border-left:2px solid var(--py-yellow) !important;}
+.CodeMirror-selected{background:rgba(255,212,59,0.15) !important;}
+.CodeMirror-focused .CodeMirror-selected{background:rgba(255,212,59,0.2) !important;}
+
+/* OUTPUT */
+.output-wrap{border-top:1px solid rgba(255,255,255,0.05);}
+.output-header{display:flex;align-items:center;justify-content:space-between;padding:0.4rem 1rem;background:rgba(0,0,0,0.2);}
+.output-label{font-family:'Space Mono',monospace;font-size:0.62rem;color:#6272a4;letter-spacing:1px;text-transform:uppercase;}
+.output-clear{font-family:'Space Mono',monospace;font-size:0.6rem;color:#6272a4;background:none;border:none;cursor:pointer;padding:2px 6px;border-radius:4px;transition:color 0.2s;}
+.output-clear:hover{color:var(--orange);}
+.output-area{
+  font-family:'Space Mono',monospace;font-size:0.78rem;color:#a3e635;
+  padding:0.8rem 1.2rem;min-height:40px;max-height:160px;
+  overflow-y:auto;white-space:pre-wrap;line-height:1.6;
+  background:#1e1f2b;
+}
 .output-area.error{color:var(--red);}
-.output-area.empty{color:var(--text-muted);font-style:italic;}
+.output-area.empty{color:#6272a4;font-style:italic;}
+.output-area.running{color:#febc2e;}
 
 /* CARD ACTIONS */
-.card-actions{display:flex;align-items:center;gap:0.5rem;padding:0.75rem 1rem;border-top:1px solid rgba(255,255,255,0.05);flex-wrap:wrap;}
-.btn-run{font-family:'Space Mono',monospace;font-size:0.72rem;font-weight:700;padding:0.4rem 1rem;border-radius:7px;background:var(--py-yellow);color:#0b0f1a;border:none;cursor:pointer;transition:opacity 0.2s;}
+.card-actions{display:flex;align-items:center;gap:0.5rem;padding:0.75rem 1rem;border-top:1px solid rgba(255,255,255,0.05);flex-wrap:wrap;background:rgba(0,0,0,0.1);}
+.btn-run{display:flex;align-items:center;gap:0.4rem;font-family:'Space Mono',monospace;font-size:0.72rem;font-weight:700;padding:0.42rem 1.1rem;border-radius:7px;background:var(--py-yellow);color:#0b0f1a;border:none;cursor:pointer;transition:opacity 0.2s;}
 .btn-run:hover{opacity:0.85;}
+.btn-run.running{opacity:0.6;cursor:not-allowed;}
 .btn-hint,.btn-solution,.btn-reset{font-family:'Space Mono',monospace;font-size:0.68rem;padding:0.35rem 0.8rem;border-radius:7px;background:transparent;border:1px solid var(--border);color:var(--text-muted);cursor:pointer;transition:all 0.2s;}
 .btn-hint:hover{border-color:var(--teal);color:var(--teal);}
 .btn-solution:hover{border-color:var(--purple);color:var(--purple);}
@@ -112,13 +162,17 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 @keyframes cardIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
 .challenge-card{animation:cardIn 0.35s ease both;}
 
+@keyframes spin{to{transform:rotate(360deg);}}
+.spin{display:inline-block;animation:spin 0.8s linear infinite;}
+
 @media(max-width:768px){
   nav{padding:0.8rem 1.2rem;}
   .hero{padding:3rem 1.2rem 1rem;}
   .controls{padding:0 1.2rem;}
   .challenges{padding:0 1rem 4rem;grid-template-columns:1fr;}
-  .code-area{font-size:0.72rem;}
+  .CodeMirror{font-size:0.72rem !important;}
   .output-area{font-size:0.72rem;}
+  .editor-shortcut{display:none;}
 }
 </style>
 </head>
@@ -168,7 +222,7 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 
 <script>
 // ─────────────────────────────────────────────
-// QUESTION BANK  (42 questions)
+// QUESTION BANK
 // ─────────────────────────────────────────────
 const QUESTIONS = [
   // ── VARIABLES ──
@@ -453,7 +507,7 @@ const QUESTIONS = [
     solution:'for i in range(1, 21):\n    if i % 3 == 0:\n        continue\n    print(i, end=" ")'
   },
 
-  // ── MIXED / CHALLENGE ──
+  // ── MIXED ──
   {
     id:'m1', topic:'loops', diff:'hard',
     title:'Longest Word in Sentence',
@@ -492,10 +546,11 @@ const QUESTIONS = [
 // STATE
 // ─────────────────────────────────────────────
 const CARDS_PER_SESSION = 6;
-let activeFilter  = 'all';
-let activeDiff    = 'all';
-let currentPool   = [];
-let solvedIds     = new Set(JSON.parse(localStorage.getItem('ds502_solved') || '[]'));
+let activeFilter = 'all';
+let activeDiff   = 'all';
+let currentPool  = [];
+let solvedIds    = new Set(JSON.parse(localStorage.getItem('ds502_solved') || '[]'));
+const editors    = {};   // CodeMirror instances keyed by question id
 
 function saveSolved() {
   try { localStorage.setItem('ds502_solved', JSON.stringify([...solvedIds])); } catch(e){}
@@ -506,9 +561,9 @@ function saveSolved() {
 // ─────────────────────────────────────────────
 function getFiltered() {
   return QUESTIONS.filter(q => {
-    const topicMatch = activeFilter === 'all' || q.topic === activeFilter;
-    const diffMatch  = activeDiff  === 'all' || q.diff  === activeDiff;
-    return topicMatch && diffMatch;
+    const topicOk = activeFilter === 'all' || q.topic === activeFilter;
+    const diffOk  = activeDiff  === 'all' || q.diff  === activeDiff;
+    return topicOk && diffOk;
   });
 }
 
@@ -522,14 +577,16 @@ function shuffle(arr) {
 }
 
 function pickChallenges() {
-  const pool = getFiltered();
-  return shuffle(pool).slice(0, CARDS_PER_SESSION);
+  return shuffle(getFiltered()).slice(0, CARDS_PER_SESSION);
 }
 
 // ─────────────────────────────────────────────
 // RENDER
 // ─────────────────────────────────────────────
 function render(questions) {
+  // Destroy old CM instances
+  Object.keys(editors).forEach(k => { try { editors[k].toTextArea(); } catch(e){} delete editors[k]; });
+
   currentPool = questions;
   const grid = document.getElementById('challengesGrid');
   grid.innerHTML = '';
@@ -547,8 +604,9 @@ function render(questions) {
     card.id = 'card-' + q.id;
     card.style.animationDelay = (idx * 0.06) + 's';
 
-    // Escape starter for textarea
-    const safeStarter = q.starter.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    // Detect OS for shortcut label
+    const isMac = navigator.platform.toUpperCase().includes('MAC');
+    const shortcutLabel = isMac ? '⌘↩ Run' : 'Ctrl+↩ Run';
 
     card.innerHTML = `
       <div class="card-top">
@@ -562,14 +620,28 @@ function render(questions) {
       </div>
       <div class="editor-area">
         <div class="editor-header">
-          <div class="editor-dots"><div class="editor-dot r"></div><div class="editor-dot y"></div><div class="editor-dot g"></div></div>
+          <div class="editor-dots">
+            <div class="editor-dot r"></div>
+            <div class="editor-dot y"></div>
+            <div class="editor-dot g"></div>
+          </div>
           <span class="editor-label">Python 3</span>
+          <span class="editor-shortcut">${shortcutLabel}</span>
         </div>
-        <textarea class="code-area" id="code-${q.id}" spellcheck="false">${q.starter}</textarea>
-        <div class="output-area empty" id="out-${q.id}">▶ Press Run to see output</div>
+        <textarea id="code-${q.id}">${q.starter}</textarea>
+      </div>
+      <div class="output-wrap">
+        <div class="output-header">
+          <span class="output-label">Output</span>
+          <button class="output-clear" onclick="clearOutput('${q.id}')">✕ clear</button>
+        </div>
+        <div class="output-area empty" id="out-${q.id}">▶ Press Run (or Ctrl+Enter) to execute</div>
       </div>
       <div class="card-actions">
-        <button class="btn-run" onclick="runCard('${q.id}')">▶ Run</button>
+        <button class="btn-run" id="run-${q.id}" onclick="runCard('${q.id}')">
+          <svg width="11" height="11" fill="currentColor" viewBox="0 0 16 16"><path d="M3 2.5l10 5.5-10 5.5V2.5z"/></svg>
+          Run
+        </button>
         <button class="btn-hint"     onclick="togglePanel('hint-${q.id}')">💡 Hint</button>
         <button class="btn-solution" onclick="togglePanel('sol-${q.id}')">👁 Solution</button>
         <span class="btn-spacer"></span>
@@ -580,17 +652,42 @@ function render(questions) {
     `;
     grid.appendChild(card);
 
-    // Tab key in textarea
-    const ta = card.querySelector('.code-area');
-    ta.addEventListener('keydown', function(e) {
-      if (e.key === 'Tab') {
-        e.preventDefault();
-        const s = this.selectionStart;
-        this.value = this.value.substring(0, s) + '    ' + this.value.substring(this.selectionEnd);
-        this.selectionStart = this.selectionEnd = s + 4;
+    // ── INIT CODEMIRROR ──
+    const ta = document.getElementById('code-' + q.id);
+    const cm = CodeMirror.fromTextArea(ta, {
+      mode: 'python',
+      theme: 'dracula',
+      lineNumbers: true,
+      matchBrackets: true,
+      autoCloseBrackets: true,
+      indentUnit: 4,
+      tabSize: 4,
+      indentWithTabs: false,
+      lineWrapping: false,
+      viewportMargin: Infinity,
+      extraKeys: {
+        'Tab':        cm => cm.execCommand('indentMore'),
+        'Shift-Tab':  cm => cm.execCommand('indentLess'),
+        'Ctrl-Enter': ()  => runCard(q.id),
+        'Cmd-Enter':  ()  => runCard(q.id),
+        'Ctrl-/':     cm => cm.execCommand('toggleComment'),
+        'Cmd-/':      cm => cm.execCommand('toggleComment'),
       }
-      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') runCard(q.id);
     });
+
+    // Auto-height: grow with content, cap at 300px
+    cm.on('change', function() {
+      const lineH  = cm.defaultTextHeight();
+      const lines  = cm.lineCount();
+      const height = Math.min(Math.max(lines * lineH + 20, 100), 300);
+      cm.setSize(null, height);
+    });
+    // Initial size
+    const initLines = q.starter.split('\n').length;
+    const initH = Math.min(Math.max(initLines * cm.defaultTextHeight() + 20, 100), 300);
+    cm.setSize(null, initH);
+
+    editors[q.id] = cm;
   });
 
   updateProgress();
@@ -601,38 +698,55 @@ function togglePanel(id) {
   el.style.display = el.style.display === 'block' ? 'none' : 'block';
 }
 
-function resetCard(qid) {
-  const q = QUESTIONS.find(x => x.id === qid);
-  if (!q) return;
-  document.getElementById('code-' + qid).value = q.starter;
+function clearOutput(qid) {
   const out = document.getElementById('out-' + qid);
-  out.textContent = '▶ Press Run to see output';
+  out.textContent = '▶ Press Run (or Ctrl+Enter) to execute';
   out.className = 'output-area empty';
 }
 
-function updateProgress() {
-  const total   = currentPool.length;
-  const solved  = currentPool.filter(q => solvedIds.has(q.id)).length;
-  const wrap    = document.getElementById('progressWrap');
-  const fill    = document.getElementById('progressFill');
-  const label   = document.getElementById('progressLabel');
-  const scoreEl = document.getElementById('score-val');
+function resetCard(qid) {
+  const q = QUESTIONS.find(x => x.id === qid);
+  if (!q) return;
+  if (editors[qid]) {
+    editors[qid].setValue(q.starter);
+    editors[qid].clearHistory();
+    // Resize after reset
+    const lineH = editors[qid].defaultTextHeight();
+    const lines  = q.starter.split('\n').length;
+    const height = Math.min(Math.max(lines * lineH + 20, 100), 300);
+    editors[qid].setSize(null, height);
+  }
+  clearOutput(qid);
+}
 
-  scoreEl.textContent = solvedIds.size;
+function updateProgress() {
+  const total  = currentPool.length;
+  const solved = currentPool.filter(q => solvedIds.has(q.id)).length;
+  const wrap   = document.getElementById('progressWrap');
+  const fill   = document.getElementById('progressFill');
+  const label  = document.getElementById('progressLabel');
+  document.getElementById('score-val').textContent = solvedIds.size;
 
   if (total === 0) { wrap.style.display = 'none'; return; }
   wrap.style.display = 'block';
-  fill.style.width = (solved / total * 100) + '%';
-  label.textContent = solved + ' / ' + total + ' challenges solved';
+  fill.style.width   = (solved / total * 100) + '%';
+  label.textContent  = solved + ' / ' + total + ' challenges solved';
 }
 
 // ─────────────────────────────────────────────
-// RUN PYTHON (Skulpt)
+// RUN PYTHON  (Skulpt)
 // ─────────────────────────────────────────────
 function runCard(qid) {
-  const code = document.getElementById('code-' + qid).value;
+  const btn  = document.getElementById('run-' + qid);
   const out  = document.getElementById('out-' + qid);
-  out.className = 'output-area';
+  const cm   = editors[qid];
+  if (!cm) return;
+
+  const code = cm.getValue();
+
+  btn.classList.add('running');
+  btn.innerHTML = '<span class="spin">⟳</span> Running…';
+  out.className = 'output-area running';
   out.textContent = 'Running…';
 
   let outText = '';
@@ -644,12 +758,14 @@ function runCard(qid) {
   }
 
   Sk.configure({ output: outf, read: builtinRead, __future__: Sk.python3 });
-  Sk.misceval.asyncToPromise(function() {
-    return Sk.importMainWithBody('<stdin>', false, code, true);
-  }).then(function() {
-    out.textContent = outText || '(no output)';
-    out.className = 'output-area';
-    // Mark as solved if there's output and no error
+
+  Sk.misceval.asyncToPromise(() =>
+    Sk.importMainWithBody('<stdin>', false, code, true)
+  ).then(() => {
+    const display = outText || '(no output)';
+    out.textContent = display;
+    out.className   = 'output-area';
+
     if (outText.trim() && !solvedIds.has(qid)) {
       solvedIds.add(qid);
       saveSolved();
@@ -657,14 +773,20 @@ function runCard(qid) {
       if (card) card.classList.add('solved');
       updateProgress();
     }
-  }).catch(function(e) {
-    out.textContent = e.toString();
-    out.className = 'output-area error';
+  }).catch(e => {
+    // Clean up Skulpt error messages
+    let msg = e.toString();
+    if (e.args && e.args.v) msg = e.args.v.map(a => a.v || a).join('');
+    out.textContent = '❌ ' + msg;
+    out.className   = 'output-area error';
+  }).finally(() => {
+    btn.classList.remove('running');
+    btn.innerHTML = '<svg width="11" height="11" fill="currentColor" viewBox="0 0 16 16"><path d="M3 2.5l10 5.5-10 5.5V2.5z"/></svg> Run';
   });
 }
 
 // ─────────────────────────────────────────────
-// FILTERS & SHUFFLE
+// FILTER BUTTONS
 // ─────────────────────────────────────────────
 document.querySelectorAll('.filter-btn[data-filter]').forEach(btn => {
   btn.addEventListener('click', function() {
@@ -689,9 +811,7 @@ document.querySelectorAll('.filter-btn[data-diff]').forEach(btn => {
   });
 });
 
-document.getElementById('shuffleBtn').addEventListener('click', function() {
-  render(pickChallenges());
-});
+document.getElementById('shuffleBtn').addEventListener('click', () => render(pickChallenges()));
 
 // ─────────────────────────────────────────────
 // INIT
