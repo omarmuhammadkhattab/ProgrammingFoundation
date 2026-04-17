@@ -202,6 +202,7 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
   <button class="filter-btn" data-filter="data-structures">Data Structures</button>
   <button class="filter-btn" data-filter="conditions">Conditions</button>
   <button class="filter-btn" data-filter="loops">Loops</button>
+  <button class="filter-btn" data-filter="functions">Functions</button>
   <div class="sep"></div>
   <button class="filter-btn" data-diff="easy">🟢 Easy</button>
   <button class="filter-btn" data-diff="medium">🟡 Medium</button>
@@ -540,7 +541,72 @@ const QUESTIONS = [
     hint:'if withdrawal <= balance: subtract and print new balance, else print error.',
     solution:'balance = 1500\nwithdrawal = 200\nif withdrawal <= balance:\n    balance -= withdrawal\n    print(f"Withdrawal successful. New balance: {balance}")\nelse:\n    print("Insufficient funds")'
   },
-];
+  // ── FUNCTIONS ──
+  {
+    id:'f1', topic:'functions', diff:'easy',
+    title:'Greet by Name',
+    desc:'Define a function <code>greet(name)</code> that prints <code>Hello, [name]!</code>. Call it with your own name.',
+    starter:'def greet(name):\n    pass  # your code here\n\ngreet("Ahmed")',
+    hint:'Use an f-string: print(f"Hello, {name}!")',
+    solution:'def greet(name):\n    print(f"Hello, {name}!")\n\ngreet("Ahmed")'
+  },
+  {
+    id:'f2', topic:'functions', diff:'easy',
+    title:'Square a Number',
+    desc:'Write a function <code>square(n)</code> that <strong>returns</strong> n squared. Print the result of calling it with 7.',
+    starter:'def square(n):\n    pass\n\nprint(square(7))',
+    hint:'return n ** 2',
+    solution:'def square(n):\n    return n ** 2\n\nprint(square(7))  # 49'
+  },
+  {
+    id:'f3', topic:'functions', diff:'easy',
+    title:'Average of Two Numbers',
+    desc:'Define <code>average(a, b)</code> that returns the average of two numbers. Test it with 10 and 20.',
+    starter:'def average(a, b):\n    pass\n\nprint(average(10, 20))',
+    hint:'return (a + b) / 2',
+    solution:'def average(a, b):\n    return (a + b) / 2\n\nprint(average(10, 20))  # 15.0'
+  },
+  {
+    id:'f4', topic:'functions', diff:'medium',
+    title:'Sum of Squares',
+    desc:'Write <code>sum_of_squares(a, b)</code> that returns a² + b². Test with (3, 4) — should give 25.',
+    starter:'def sum_of_squares(a, b):\n    pass\n\nprint(sum_of_squares(3, 4))',
+    hint:'return a**2 + b**2',
+    solution:'def sum_of_squares(a, b):\n    return a**2 + b**2\n\nprint(sum_of_squares(3, 4))  # 25'
+  },
+  {
+    id:'f5', topic:'functions', diff:'medium',
+    title:'Sum of Even Numbers',
+    desc:'Write <code>sum_evens(numbers)</code> that takes a list and returns the sum of all even numbers. Test with <code>[1, 2, 3, 4, 5, 6]</code>.',
+    starter:'def sum_evens(numbers):\n    pass\n\nprint(sum_evens([1, 2, 3, 4, 5, 6]))',
+    hint:'Loop through, check n % 2 == 0, accumulate total, then return it.',
+    solution:'def sum_evens(numbers):\n    total = 0\n    for n in numbers:\n        if n % 2 == 0:\n            total += n\n    return total\n\nprint(sum_evens([1, 2, 3, 4, 5, 6]))  # 12'
+  },
+  {
+    id:'f6', topic:'functions', diff:'medium',
+    title:'Power with Default',
+    desc:'Write <code>power(base, exponent=2)</code> that returns base raised to exponent. Test with <code>power(3)</code> and <code>power(3, 3)</code>.',
+    starter:'def power(base, exponent=2):\n    pass\n\nprint(power(3))\nprint(power(3, 3))',
+    hint:'return base ** exponent',
+    solution:'def power(base, exponent=2):\n    return base ** exponent\n\nprint(power(3))    # 9\nprint(power(3, 3)) # 27'
+  },
+  {
+    id:'f7', topic:'functions', diff:'medium',
+    title:'Min and Max',
+    desc:'Write <code>min_max(numbers)</code> that returns both the minimum and maximum of a list. Unpack and print both.',
+    starter:'def min_max(numbers):\n    pass\n\nlo, hi = min_max([3, 1, 9, 4, 7])\nprint(lo, hi)',
+    hint:'return min(numbers), max(numbers)',
+    solution:'def min_max(numbers):\n    return min(numbers), max(numbers)\n\nlo, hi = min_max([3, 1, 9, 4, 7])\nprint(f"Min: {lo}, Max: {hi}")'
+  },
+  {
+    id:'f8', topic:'functions', diff:'hard',
+    title:'Is Prime?',
+    desc:'Write <code>is_prime(n)</code> that returns <code>True</code> if n is prime, <code>False</code> otherwise. Test with 7, 10, and 13.',
+    starter:'def is_prime(n):\n    pass\n\nprint(is_prime(7))\nprint(is_prime(10))\nprint(is_prime(13))',
+    hint:'A number is prime if no number from 2 up to (not including) n divides it evenly.',
+    solution:'def is_prime(n):\n    if n < 2:\n        return False\n    for i in range(2, n):\n        if n % i == 0:\n            return False\n    return True\n\nprint(is_prime(7))   # True\nprint(is_prime(10))  # False\nprint(is_prime(13))  # True'
+  },
+];;
 
 // ─────────────────────────────────────────────
 // STATE
