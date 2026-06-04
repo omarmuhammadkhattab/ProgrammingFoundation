@@ -26,9 +26,9 @@
   .topics-row{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:1.5rem;}
   .t-chip{font-family:'Space Mono',monospace;font-size:0.72rem;padding:0.3rem 0.8rem;border-radius:100px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:var(--text-muted);}
   main{max-width:900px;margin:0 auto;padding:3rem 2rem 6rem;}
-  .section{margin-bottom:4rem;}
-  .section-header{display:flex;align-items:center;gap:0.8rem;margin-bottom:1.5rem;}
-  .section-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;background:rgba(45,212,191,0.12);}
+  .section{margin-bottom:5rem;}
+  .section-header{display:flex;align-items:center;gap:1rem;margin-bottom:1.8rem;}
+  .section-icon{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(45,212,191,0.12);}
   .section h2{font-size:1.5rem;font-weight:700;letter-spacing:-0.5px;}
   .prose{color:var(--text-muted);font-size:0.97rem;line-height:1.8;margin-bottom:1.2rem;}
   .prose strong{color:var(--text);}
@@ -153,7 +153,7 @@
   <!-- OVERVIEW -->
   <div class="section">
     <div class="section-header">
-      <div class="section-icon">📁</div>
+      <div class="section-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div>
       <h2>What Is File Handling?</h2>
     </div>
     <p class="prose">File handling is the ability to <strong>create, open, read, write, and close files</strong> stored on your computer's disk. It lets your program persist data beyond a single run — saving results, reading configuration, logging events, and more.</p>
@@ -175,7 +175,7 @@
   <!-- OPEN MODES -->
   <div class="section">
     <div class="section-header">
-      <div class="section-icon">🔓</div>
+      <div class="section-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg></div>
       <h2>Opening a File — Modes</h2>
     </div>
     <p class="prose">The built-in <code style="font-family:Space Mono,monospace;font-size:0.85em;color:var(--accent)">open()</code> function requires a <strong>file path</strong> and a <strong>mode</strong>. The mode controls what you're allowed to do with the file.</p>
@@ -217,7 +217,7 @@
   <!-- READING -->
   <div class="section">
     <div class="section-header">
-      <div class="section-icon">📖</div>
+      <div class="section-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
       <h2>Reading a File</h2>
     </div>
     <p class="prose">Open the file in read mode, call <code style="font-family:Space Mono,monospace;font-size:0.85em;color:var(--accent)">file.read()</code> to get all content as a single string, then close it. You can also use <code style="font-family:Space Mono,monospace;font-size:0.85em">readline()</code> to read one line at a time, or <code style="font-family:Space Mono,monospace;font-size:0.85em">readlines()</code> to get a list of all lines.</p>
@@ -240,7 +240,7 @@
   <!-- WRITING -->
   <div class="section">
     <div class="section-header">
-      <div class="section-icon">✍️</div>
+      <div class="section-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
       <h2>Writing to a File</h2>
     </div>
     <p class="prose">Open the file in write mode <code style="font-family:Space Mono,monospace;font-size:0.85em;color:var(--py-yellow)">"w"</code> and call <code style="font-family:Space Mono,monospace;font-size:0.85em;color:var(--accent)">file.write()</code>. Be careful — write mode <strong>erases</strong> any existing content first. To add without erasing, use append mode instead.</p>
@@ -263,14 +263,14 @@
     </div>
 
     <div class="highlight-box yellow">
-      ⚠️ <strong>Write mode erases first!</strong> If you open an existing file with <code style="font-family:Space Mono,monospace;font-size:0.85em">"w"</code>, all its previous content is gone immediately. Use <code style="font-family:Space Mono,monospace;font-size:0.85em">"a"</code> to append safely.
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-3px;margin-right:4px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> <strong>Write mode erases first!</strong> If you open an existing file with <code style="font-family:Space Mono,monospace;font-size:0.85em">"w"</code>, all its previous content is gone immediately. Use <code style="font-family:Space Mono,monospace;font-size:0.85em">"a"</code> to append safely.
     </div>
   </div>
 
   <!-- CLOSING / WITH STATEMENT -->
   <div class="section">
     <div class="section-header">
-      <div class="section-icon">🔒</div>
+      <div class="section-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
       <h2>Closing a File — The <code style="font-size:1.1rem">with</code> Statement</h2>
     </div>
     <p class="prose">Always close files after use to release system resources and ensure your data is saved. The <code style="font-family:Space Mono,monospace;font-size:0.85em;color:var(--accent)">with</code> statement is the preferred approach — it <strong>automatically closes the file</strong> when the block exits, even if an error occurs.</p>
@@ -291,20 +291,20 @@
     </div>
 
     <div class="highlight-box green">
-      ✅ <strong>Best practice:</strong> Always use the <code style="font-family:Space Mono,monospace;font-size:0.85em">with open(...) as file:</code> pattern. It prevents resource leaks and file corruption, and your code is shorter and safer.
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-3px;margin-right:4px;color:#34d399"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> <strong>Best practice:</strong> Always use the <code style="font-family:Space Mono,monospace;font-size:0.85em">with open(...) as file:</code> pattern. It prevents resource leaks and file corruption, and your code is shorter and safer.
     </div>
   </div>
 
   <!-- ADVANTAGES & DISADVANTAGES -->
   <div class="section">
     <div class="section-header">
-      <div class="section-icon">⚖️</div>
+      <div class="section-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="3" x2="12" y2="21"/><path d="M3 6l9 6 9-6"/><path d="M3 18h6l3-6 3 6h6"/></svg></div>
       <h2>Advantages &amp; Disadvantages</h2>
     </div>
 
     <div class="pros-cons">
       <div class="pros-cons-card pros">
-        <div class="pros-cons-title">✅ Advantages</div>
+        <div class="pros-cons-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-3px;margin-right:6px;color:#34d399"><polyline points="20 6 9 17 4 12"/></svg>Advantages</div>
         <ul>
           <li><strong>Versatile</strong> — create, read, write, append, rename, delete</li>
           <li><strong>Flexible</strong> — works with text files, binary files, CSV, and more</li>
@@ -313,7 +313,7 @@
         </ul>
       </div>
       <div class="pros-cons-card cons">
-        <div class="pros-cons-title">❌ Disadvantages</div>
+        <div class="pros-cons-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-3px;margin-right:6px;color:#f87171"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Disadvantages</div>
         <ul>
           <li><strong>Error-prone</strong> — permissions, missing files, and locks can cause failures</li>
           <li><strong>Security risks</strong> — user input in file paths can expose sensitive data</li>
@@ -327,7 +327,7 @@
   <!-- FULL EXAMPLE -->
   <div class="section">
     <div class="section-header">
-      <div class="section-icon">🧪</div>
+      <div class="section-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2v17.5c0 1.4-1.1 2.5-2.5 2.5h0c-1.4 0-2.5-1.1-2.5-2.5V2"/><path d="M8.5 2h7"/><path d="M14.5 16h-5"/></svg></div>
       <h2>Putting It Together</h2>
     </div>
     <p class="prose">A complete workflow: write data, append more, then read it all back.</p>
@@ -356,7 +356,7 @@
   <!-- LIVE TERMINAL -->
   <div class="section">
     <div class="section-header">
-      <div class="section-icon">⌨️</div>
+      <div class="section-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><line x1="6" y1="10" x2="6" y2="10"/><line x1="10" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="14" y2="10"/><line x1="18" y1="10" x2="18" y2="10"/><line x1="6" y1="14" x2="18" y2="14"/></svg></div>
       <h2>Try It — Live Python Terminal</h2>
     </div>
     <p class="prose">Note: Skulpt (the in-browser Python engine) has limited file I/O support. The snippets below demonstrate the patterns using in-memory simulation so you can see the logic clearly.</p>
