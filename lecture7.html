@@ -25,14 +25,14 @@
   .lec-hero p{color:var(--text-muted);max-width:560px;font-size:1rem;}
   .topics-row{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:1.5rem;}
   .t-chip{font-family:'Space Mono',monospace;font-size:0.72rem;padding:0.3rem 0.8rem;border-radius:100px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:var(--text-muted);}
-  main{max-width:900px;margin:0 auto;padding:3rem 2rem 6rem;}
-  .section{margin-bottom:4rem;}
-  .section-header{display:flex;align-items:center;gap:0.8rem;margin-bottom:1.5rem;}
-  .section-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;background:rgba(167,139,250,0.12);}
-  .section h2{font-size:1.5rem;font-weight:700;letter-spacing:-0.5px;}
-  .prose{color:var(--text-muted);font-size:0.97rem;line-height:1.8;margin-bottom:1.2rem;}
+  main{max-width:900px;margin:0 auto;padding:4rem 2rem 6rem;}
+  .section{margin-bottom:5.5rem;padding-top:0.5rem;}
+  .section-header{display:flex;align-items:center;gap:1.2rem;margin-bottom:2rem;}
+  .section-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(167,139,250,0.12);}
+  .section h2{font-size:1.55rem;font-weight:700;letter-spacing:-0.5px;line-height:1.2;}
+  .prose{color:var(--text-muted);font-size:0.97rem;line-height:1.9;margin-bottom:1.5rem;}
   .prose strong{color:var(--text);}
-  .code-block{background:#0d1117;border:1px solid rgba(255,255,255,0.1);border-radius:12px;overflow:hidden;margin:1.2rem 0;}
+  .code-block{background:#0d1117;border:1px solid rgba(255,255,255,0.1);border-radius:12px;overflow:hidden;margin:1.6rem 0;}
   .code-header{display:flex;align-items:center;justify-content:space-between;padding:0.7rem 1rem;background:rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.07);}
   .code-dots{display:flex;gap:6px;}
   .code-dot{width:10px;height:10px;border-radius:50%;}
@@ -40,13 +40,13 @@
   .code-label{font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--text-muted);}
   .code-body{padding:1.2rem 1.5rem;font-family:'Space Mono',monospace;font-size:0.85rem;line-height:1.8;overflow-x:auto;white-space:pre;}
   .kw{color:#ff79c6;}.fn{color:#50fa7b;}.str{color:#f1fa8c;}.cm{color:#6272a4;}.num{color:#bd93f9;}.var{color:#8be9fd;}.cls{color:#a78bfa;}
-  .highlight-box{border-left:3px solid var(--accent);background:rgba(167,139,250,0.05);border-radius:0 8px 8px 0;padding:1rem 1.2rem;margin:1rem 0;font-size:0.92rem;}
+  .highlight-box{border-left:3px solid var(--accent);background:rgba(167,139,250,0.05);border-radius:0 8px 8px 0;padding:1.1rem 1.4rem;margin:1.6rem 0;font-size:0.93rem;line-height:1.75;}
   .highlight-box.yellow{border-color:var(--py-yellow);background:rgba(255,212,59,0.05);}
   .highlight-box.green{border-color:var(--green);background:rgba(52,211,153,0.06);}
   .highlight-box.orange{border-color:var(--orange);background:rgba(251,146,60,0.05);}
   .highlight-box.red{border-color:var(--red);background:rgba(248,113,113,0.07);}
-  .concept-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(220px,100%),1fr));gap:1rem;margin:1.5rem 0;}
-  .concept-card{border-radius:12px;padding:1.4rem;border:1px solid;position:relative;overflow:hidden;}
+  .concept-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(220px,100%),1fr));gap:1.2rem;margin:1.8rem 0;}
+  .concept-card{border-radius:12px;padding:1.6rem;border:1px solid;position:relative;overflow:hidden;}
   .concept-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
   .concept-card.c1{background:rgba(167,139,250,0.07);border-color:rgba(167,139,250,0.25);}
   .concept-card.c1::after{background:linear-gradient(90deg,#a78bfa,#c4b5fd);}
@@ -62,20 +62,20 @@
   .c3 .concept-title{color:var(--green);}
   .c4 .concept-title{color:var(--orange);}
   .concept-desc{font-size:0.83rem;color:var(--text-muted);line-height:1.5;}
-  .fn-anatomy{display:grid;grid-template-columns:1fr;gap:0;background:#0d1117;border:1px solid rgba(255,255,255,0.1);border-radius:12px;overflow:hidden;margin:1.2rem 0;font-family:'Space Mono',monospace;font-size:0.85rem;line-height:1.8;}
+  .fn-anatomy{display:grid;grid-template-columns:1fr;gap:0;background:#0d1117;border:1px solid rgba(255,255,255,0.1);border-radius:12px;overflow:hidden;margin:1.6rem 0;font-family:'Space Mono',monospace;font-size:0.85rem;line-height:1.8;}
   .fn-line{display:flex;align-items:stretch;border-bottom:1px solid rgba(255,255,255,0.04);}
   .fn-line:last-child{border-bottom:none;}
-  .fn-code{padding:0.5rem 1.5rem;flex:1;white-space:pre;}
-  .fn-anno{padding:0.5rem 1.2rem;border-left:1px solid rgba(255,255,255,0.07);font-family:'DM Sans',sans-serif;font-size:0.8rem;color:var(--text-muted);display:flex;align-items:center;min-width:200px;gap:0.5rem;}
+  .fn-code{padding:0.65rem 1.5rem;flex:1;white-space:pre;}
+  .fn-anno{padding:0.65rem 1.2rem;border-left:1px solid rgba(255,255,255,0.07);font-family:'DM Sans',sans-serif;font-size:0.8rem;color:var(--text-muted);display:flex;align-items:center;min-width:200px;gap:0.5rem;}
   .fn-anno .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
   .table-wrap{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;overflow:hidden;overflow-x:auto;}
   table{width:100%;border-collapse:collapse;font-size:0.88rem;}
-  th{padding:0.6rem 1rem;text-align:left;font-size:0.75rem;color:var(--text-muted);font-weight:600;border-bottom:1px solid var(--border);}
-  td{padding:0.6rem 1rem;border-bottom:1px solid rgba(255,255,255,0.04);font-family:'Space Mono',monospace;font-size:0.82rem;}
+  th{padding:0.8rem 1.2rem;text-align:left;font-size:0.75rem;color:var(--text-muted);font-weight:600;border-bottom:1px solid var(--border);}
+  td{padding:0.85rem 1.2rem;border-bottom:1px solid rgba(255,255,255,0.04);font-family:'Space Mono',monospace;font-size:0.82rem;}
   tr:last-child td{border-bottom:none;}
   td:first-child{color:var(--accent);}
   td:last-child{color:var(--text-muted);font-family:'DM Sans',sans-serif;}
-  .diagram{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:2rem;margin:1.2rem 0;display:flex;justify-content:center;overflow-x:auto;}
+  .diagram{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:2.5rem;margin:1.6rem 0;display:flex;justify-content:center;overflow-x:auto;}
   .terminal-wrapper{background:#0d1117;border:1px solid rgba(255,255,255,0.12);border-radius:16px;overflow:hidden;margin-top:1rem;}
   .terminal-header{background:rgba(255,255,255,0.05);padding:0.8rem 1.2rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.08);}
   .terminal-title{font-family:'Space Mono',monospace;font-size:0.75rem;color:var(--accent);display:flex;align-items:center;gap:0.5rem;}
@@ -159,7 +159,7 @@
   <!-- WHAT IS OOP -->
   <div class="section">
     <div class="section-header">
-      <div class="section-icon">🌍</div>
+      <div class="section-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
       <h2>What Is Object-Oriented Programming?</h2>
     </div>
     <p class="prose">Object-oriented programming (OOP) is a method of structuring a program by <strong>bundling related properties and behaviors into individual objects</strong>. Instead of writing a list of instructions, you model your program around real-world entities.</p>
@@ -184,14 +184,14 @@
     </div>
 
     <div class="highlight-box">
-      🏗️ <strong>The blueprint analogy:</strong> A <em>class</em> is like an architectural blueprint — it defines the structure. An <em>instance</em> (object) is the actual building constructed from that blueprint. You can build many buildings from one blueprint, each with its own address and paint color.
+      <strong>The blueprint analogy:</strong> A <em>class</em> is like an architectural blueprint — it defines the structure. An <em>instance</em> (object) is the actual building constructed from that blueprint. You can build many buildings from one blueprint, each with its own address and paint color.
     </div>
   </div>
 
   <!-- OOP PILLARS -->
   <div class="section">
     <div class="section-header">
-      <div class="section-icon">🏛️</div>
+      <div class="section-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg></div>
       <h2>The Four Pillars of OOP</h2>
     </div>
 
@@ -212,7 +212,7 @@
   <!-- DEFINING A CLASS -->
   <div class="section">
     <div class="section-header">
-      <div class="section-icon">📐</div>
+      <div class="section-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18M3 3h8v8"/><path d="M21 21v-8h-8"/></svg></div>
       <h2>Defining a Class</h2>
     </div>
     <p class="prose">Use the <code style="font-family:Space Mono,monospace;font-size:0.85em;color:var(--accent)">class</code> keyword followed by the class name (by convention, use <strong>PascalCase</strong>). The body contains method definitions — just regular functions that live inside the class block.</p>
@@ -245,14 +245,14 @@
     </div>
 
     <div class="highlight-box yellow">
-      🔑 <strong>self</strong> is a reference to the current instance of the class. Every instance method must accept it as the first parameter — Python passes it automatically when you call the method. You don't include it in the call: <code style="font-family:Space Mono,monospace;font-size:0.85em">p.greet()</code>, not <code style="font-family:Space Mono,monospace;font-size:0.85em">p.greet(p)</code>.
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-3px;margin-right:4px"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg> <strong>self</strong> is a reference to the current instance of the class. Every instance method must accept it as the first parameter — Python passes it automatically when you call the method. You don't include it in the call: <code style="font-family:Space Mono,monospace;font-size:0.85em">p.greet()</code>, not <code style="font-family:Space Mono,monospace;font-size:0.85em">p.greet(p)</code>.
     </div>
   </div>
 
   <!-- INSTANTIATING OBJECTS -->
   <div class="section">
     <div class="section-header">
-      <div class="section-icon">⚡</div>
+      <div class="section-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
       <h2>Creating Instances (Instantiation)</h2>
     </div>
     <p class="prose">Use the class name with <code style="font-family:Space Mono,monospace;font-size:0.85em;color:var(--accent)">( )</code> notation to create an object. The arguments you pass go directly to <code style="font-family:Space Mono,monospace;font-size:0.85em">__init__</code>. You can create as many instances as you need — each is independent.</p>
@@ -313,7 +313,7 @@
   <!-- ATTRIBUTES -->
   <div class="section">
     <div class="section-header">
-      <div class="section-icon">🗂️</div>
+      <div class="section-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6l3-3h12l3 3"/><rect x="2" y="6" width="20" height="15" rx="2"/><path d="M8 10h8"/><path d="M8 14h5"/></svg></div>
       <h2>Data Attributes vs. Class Attributes</h2>
     </div>
     <p class="prose">There are two kinds of attributes. <strong>Data attributes</strong> (instance variables) belong to each individual object. <strong>Class attributes</strong> are shared by all instances — like a static variable in Java.</p>
@@ -338,14 +338,14 @@
     </div>
 
     <div class="highlight-box green">
-      ♻️ <strong>No manual memory management:</strong> Python has automatic garbage collection. When all references to an object go out of scope, Python frees the memory automatically. You don't need a destructor or <code style="font-family:Space Mono,monospace;font-size:0.85em">free()</code>.
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-3px;margin-right:6px"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg><strong>No manual memory management:</strong> Python has automatic garbage collection. When all references to an object go out of scope, Python frees the memory automatically. You don't need a destructor or <code style="font-family:Space Mono,monospace;font-size:0.85em">free()</code>.
     </div>
   </div>
 
   <!-- INHERITANCE -->
   <div class="section">
     <div class="section-header">
-      <div class="section-icon">🧬</div>
+      <div class="section-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 15c6.667-6 13.333 0 20-6"/><path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"/><path d="M15 2c-1.798 1.999-2.518 3.997-2.807 5.994"/><path d="m17 6-2.5-2.5"/><path d="m14 8-1-1"/><path d="m7 18 2.5 2.5"/><path d="m3.5 14.5.5.5"/><path d="m20 9 .5.5"/><path d="m6.5 12.5 1 1"/><path d="m16.5 10.5 1 1"/><path d="m10 16 1.5 1.5"/></svg></div>
       <h2>Inheritance</h2>
     </div>
     <p class="prose">Inheritance lets one class <strong>derive properties and methods from another</strong>. The class being inherited from is the <em>parent</em> (or superclass); the one inheriting is the <em>child</em> (or subclass). The child gets everything the parent has, and can add or override.</p>
@@ -374,14 +374,14 @@
     </div>
 
     <div class="highlight-box">
-      🔄 <strong>Polymorphism in action:</strong> When Dog and Cat both override <code style="font-family:Space Mono,monospace;font-size:0.85em">speak()</code>, they exhibit polymorphism — the same method name behaves differently depending on the object type. This is what makes code flexible and extensible.
+      <strong>Polymorphism in action:</strong> When Dog and Cat both override <code style="font-family:Space Mono,monospace;font-size:0.85em">speak()</code>, they exhibit polymorphism — the same method name behaves differently depending on the object type. This is what makes code flexible and extensible.
     </div>
   </div>
 
   <!-- ACCESSING ATTRIBUTES AT RUNTIME -->
   <div class="section">
     <div class="section-header">
-      <div class="section-icon">🔍</div>
+      <div class="section-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
       <h2>Accessing Attributes Dynamically</h2>
     </div>
     <p class="prose">Sometimes you only know the name of an attribute at runtime (e.g., it comes from user input). Python's built-in <code style="font-family:Space Mono,monospace;font-size:0.85em;color:var(--accent)">getattr()</code> function solves this elegantly.</p>
@@ -409,7 +409,7 @@
   <!-- LIVE TERMINAL -->
   <div class="section">
     <div class="section-header">
-      <div class="section-icon">⌨️</div>
+      <div class="section-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><line x1="6" y1="10" x2="6" y2="10"/><line x1="10" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="14" y2="10"/><line x1="18" y1="10" x2="18" y2="10"/><line x1="6" y1="14" x2="18" y2="14"/></svg></div>
       <h2>Try It — Live Python Terminal</h2>
     </div>
     <p class="prose">Experiment with classes directly in your browser. Load a snippet or write your own.</p>
