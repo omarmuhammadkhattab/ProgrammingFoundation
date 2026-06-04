@@ -26,9 +26,9 @@
   .topics-row{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:1.5rem;}
   .t-chip{font-family:'Space Mono',monospace;font-size:0.72rem;padding:0.3rem 0.8rem;border-radius:100px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:var(--text-muted);}
   main{max-width:900px;margin:0 auto;padding:3rem 2rem 6rem;}
-  .section{margin-bottom:4rem;}
-  .section-header{display:flex;align-items:center;gap:0.8rem;margin-bottom:1.5rem;}
-  .section-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;background:rgba(251,146,60,0.12);}
+  .section{margin-bottom:5rem;}
+  .section-header{display:flex;align-items:center;gap:1rem;margin-bottom:1.8rem;}
+  .section-icon{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(251,146,60,0.12);}
   .section h2{font-size:1.5rem;font-weight:700;letter-spacing:-0.5px;}
   .prose{color:var(--text-muted);font-size:0.97rem;line-height:1.8;margin-bottom:1.2rem;}
   .prose strong{color:var(--text);}
@@ -158,7 +158,7 @@
   <!-- WHY FUNCTIONS -->
   <div class="section">
     <div class="section-header">
-      <div class="section-icon">🧩</div>
+      <div class="section-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2H2v10h10V2z"/><path d="M22 12h-4v-2a2 2 0 1 0-4 0v2H12v4h2a2 2 0 1 1 0 4h-2v4h10V12z"/></svg></div>
       <h2>Why Do We Need Functions?</h2>
     </div>
     <p class="prose">Functions are a fundamental building block in Python programming. They let you <strong>organize code into reusable blocks</strong>, making programs more efficient and easier to understand.</p>
@@ -183,14 +183,14 @@
     </div>
 
     <div class="highlight-box">
-      🍞 <strong>The toaster analogy:</strong> A function is like a toaster — you don't need a different toaster for bread vs. bagels. You just pass in what you want toasted (<em>input / argument</em>), and it gives back something toasted (<em>output / return value</em>). Same toaster, different inputs.
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-3px;margin-right:6px"><rect x="2" y="8" width="20" height="12" rx="2"/><path d="M6 8V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/></svg><strong>The toaster analogy:</strong> A function is like a toaster — you don't need a different toaster for bread vs. bagels. You just pass in what you want toasted (<em>input / argument</em>), and it gives back something toasted (<em>output / return value</em>). Same toaster, different inputs.
     </div>
   </div>
 
   <!-- ANATOMY OF A FUNCTION -->
   <div class="section">
     <div class="section-header">
-      <div class="section-icon">🔬</div>
+      <div class="section-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 21h4"/><path d="M12 21v-4"/><path d="M8 7l8 8"/><path d="M5 3l3 3-5 5 3 3"/><path d="M19 21H5"/><path d="M9 3h6v9H9z"/></svg></div>
       <h2>Anatomy of a Python Function</h2>
     </div>
     <p class="prose">Every function has the same structure. Here's how to read and write one:</p>
@@ -228,14 +228,14 @@
     </div>
 
     <div class="highlight-box yellow" style="margin-top:1.5rem">
-      🔑 <strong>Parameters vs. Arguments:</strong> A <em>parameter</em> is the variable in the function definition (<code style="font-family:Space Mono,monospace;font-size:0.85em">def greet(name)</code>). An <em>argument</em> is the actual value you pass when calling it (<code style="font-family:Space Mono,monospace;font-size:0.85em">greet("Ahmed")</code>).
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-3px;margin-right:4px"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg> <strong>Parameters vs. Arguments:</strong> A <em>parameter</em> is the variable in the function definition (<code style="font-family:Space Mono,monospace;font-size:0.85em">def greet(name)</code>). An <em>argument</em> is the actual value you pass when calling it (<code style="font-family:Space Mono,monospace;font-size:0.85em">greet("Ahmed")</code>).
     </div>
   </div>
 
   <!-- DEFINING & CALLING -->
   <div class="section">
     <div class="section-header">
-      <div class="section-icon">📞</div>
+      <div class="section-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.07 10.5a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3 .1H6a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 7.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21 14l.92 2.92z"/></svg></div>
       <h2>Defining &amp; Calling a Function</h2>
     </div>
     <p class="prose"><strong>Defining</strong> a function creates it — but does not run it. <strong>Calling</strong> a function is what actually executes its code. You can call the same function as many times as you like with different inputs.</p>
@@ -290,7 +290,7 @@
   <!-- RETURN VALUES -->
   <div class="section">
     <div class="section-header">
-      <div class="section-icon">↩️</div>
+      <div class="section-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg></div>
       <h2>Return Values</h2>
     </div>
     <p class="prose">The <code style="font-family:Space Mono,monospace;font-size:0.85em;color:var(--orange)">return</code> statement ends the function and sends a value back to the caller. A function without a <code style="font-family:Space Mono,monospace;font-size:0.85em">return</code> statement implicitly returns <code style="font-family:Space Mono,monospace;font-size:0.85em">None</code>. You can also return <strong>multiple values</strong> at once — Python packs them into a tuple.</p>
@@ -326,14 +326,14 @@
     </div>
 
     <div class="highlight-box red">
-      ⚠️ <strong>Code after return is unreachable.</strong> Once Python hits <code style="font-family:Space Mono,monospace;font-size:0.85em">return</code>, it exits the function immediately. Any statements written after it in the same branch will never run.
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-3px;margin-right:4px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> <strong>Code after return is unreachable.</strong> Once Python hits <code style="font-family:Space Mono,monospace;font-size:0.85em">return</code>, it exits the function immediately. Any statements written after it in the same branch will never run.
     </div>
   </div>
 
   <!-- DEFAULT PARAMETERS -->
   <div class="section">
     <div class="section-header">
-      <div class="section-icon">⚙️</div>
+      <div class="section-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M4.93 4.93a10 10 0 0 0 0 14.14"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M2 12h2"/><path d="M20 12h2"/></svg></div>
       <h2>Default Parameter Values</h2>
     </div>
     <p class="prose">You can give parameters a <strong>default value</strong> by writing <code style="font-family:Space Mono,monospace;font-size:0.85em">param=value</code> in the definition. Parameters with defaults become <strong>optional</strong> when the function is called — if you don't pass them, Python uses the default.</p>
@@ -356,14 +356,14 @@
     </div>
 
     <div class="highlight-box">
-      📌 <strong>Rule:</strong> Parameters with default values must always come <em>after</em> parameters without defaults. <code style="font-family:Space Mono,monospace;font-size:0.85em">def f(a=1, b)</code> is a <span style="color:var(--red)">SyntaxError</span>. Write it as <code style="font-family:Space Mono,monospace;font-size:0.85em">def f(b, a=1)</code>.
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-3px;margin-right:4px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> <strong>Rule:</strong> Parameters with default values must always come <em>after</em> parameters without defaults. <code style="font-family:Space Mono,monospace;font-size:0.85em">def f(a=1, b)</code> is a <span style="color:var(--red)">SyntaxError</span>. Write it as <code style="font-family:Space Mono,monospace;font-size:0.85em">def f(b, a=1)</code>.
     </div>
   </div>
 
   <!-- SCOPE -->
   <div class="section">
     <div class="section-header">
-      <div class="section-icon">🔭</div>
+      <div class="section-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
       <h2>Variable Scope</h2>
     </div>
     <p class="prose">Scope determines <strong>where a variable can be seen and used</strong>. Variables created inside a function are <em>local</em> — they exist only while the function runs and are invisible from outside.</p>
@@ -385,14 +385,14 @@
     </div>
 
     <div class="highlight-box green">
-      ✅ <strong>Best practice:</strong> Avoid modifying global variables from inside a function. Instead, pass values in as <em>parameters</em> and get results back via <em>return</em>. This keeps functions self-contained and easier to test.
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-3px;margin-right:4px;color:#34d399"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> <strong>Best practice:</strong> Avoid modifying global variables from inside a function. Instead, pass values in as <em>parameters</em> and get results back via <em>return</em>. This keeps functions self-contained and easier to test.
     </div>
   </div>
 
   <!-- EXAMPLES -->
   <div class="section">
     <div class="section-header">
-      <div class="section-icon">📚</div>
+      <div class="section-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
       <h2>Examples</h2>
     </div>
 
@@ -431,7 +431,7 @@
   <!-- TERMINAL -->
   <div class="section">
     <div class="section-header">
-      <div class="section-icon">⚡</div>
+      <div class="section-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
       <h2>Try it — Live Python Terminal</h2>
     </div>
     <p class="prose">Experiment with functions right in your browser. Click a snippet or write your own.</p>
