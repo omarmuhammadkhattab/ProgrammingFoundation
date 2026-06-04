@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lecture 8 – File Handling in Python</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulkt-stdlib.js"></script>
+<style>
+  :root{--bg:#0b0f1a;--bg2:#111827;--bg3:#1a2236;--py-yellow:#FFD43B;--py-blue:#4584b6;--py-blue-light:#5ba3d9;--text:#e2e8f0;--text-muted:#94a3b8;--border:rgba(255,255,255,0.07);--card-bg:rgba(26,34,54,0.8);--green:#34d399;--red:#f87171;--purple:#a78bfa;--orange:#fb923c;--teal:#2dd4bf;--accent:#2dd4bf;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7;}
+  a{text-decoration:none;}
+  nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 2.5rem;background:rgba(11,15,26,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+  .nav-back{display:flex;align-items:center;gap:0.5rem;color:var(--text-muted);font-size:0.9rem;transition:color 0.2s;}
+  .nav-back:hover{color:var(--accent);}
+  .nav-title{font-family:'Space Mono',monospace;font-size:0.85rem;color:var(--py-yellow);}
+  .nav-lec{font-family:'Space Mono',monospace;font-size:0.75rem;color:var(--text-muted);}
+  .lec-hero{background:linear-gradient(135deg,#0b0f1a 0%,#0b1a18 100%);border-bottom:1px solid var(--border);padding:4rem 2.5rem 3rem;position:relative;overflow:hidden;}
+  .lec-hero::before{content:'08';position:absolute;right:3rem;top:50%;transform:translateY(-50%);font-family:'Space Mono',monospace;font-size:12rem;font-weight:700;color:rgba(45,212,191,0.04);line-height:1;pointer-events:none;}
+  .lec-num{font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:3px;color:var(--accent);text-transform:uppercase;margin-bottom:0.8rem;}
+  .lec-hero h1{font-size:clamp(2rem,4vw,3.2rem);font-weight:700;letter-spacing:-1.5px;margin-bottom:1rem;}
+  .lec-hero h1 em{font-style:normal;color:var(--accent);}
+  .lec-hero p{color:var(--text-muted);max-width:560px;font-size:1rem;}
+  .topics-row{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:1.5rem;}
+  .t-chip{font-family:'Space Mono',monospace;font-size:0.72rem;padding:0.3rem 0.8rem;border-radius:100px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:var(--text-muted);}
+  main{max-width:900px;margin:0 auto;padding:3rem 2rem 6rem;}
+  .section{margin-bottom:4rem;}
+  .section-header{display:flex;align-items:center;gap:0.8rem;margin-bottom:1.5rem;}
+  .section-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;background:rgba(45,212,191,0.12);}
+  .section h2{font-size:1.5rem;font-weight:700;letter-spacing:-0.5px;}
+  .prose{color:var(--text-muted);font-size:0.97rem;line-height:1.8;margin-bottom:1.2rem;}
+  .prose strong{color:var(--text);}
+  .code-block{background:#0d1117;border:1px solid rgba(255,255,255,0.1);border-radius:12px;overflow:hidden;margin:1.2rem 0;}
+  .code-header{display:flex;align-items:center;justify-content:space-between;padding:0.7rem 1rem;background:rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.07);}
+  .code-dots{display:flex;gap:6px;}
+  .code-dot{width:10px;height:10px;border-radius:50%;}
+  .code-dot.r{background:#ff5f57;}.code-dot.y{background:#febc2e;}.code-dot.g{background:#28c840;}
+  .code-label{font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--text-muted);}
+  .code-body{padding:1.2rem 1.5rem;font-family:'Space Mono',monospace;font-size:0.85rem;line-height:1.8;overflow-x:auto;white-space:pre;}
+  .kw{color:#ff79c6;}.fn{color:#50fa7b;}.str{color:#f1fa8c;}.cm{color:#6272a4;}.num{color:#bd93f9;}.var{color:#8be9fd;}.cls{color:#a78bfa;}
+  .highlight-box{border-left:3px solid var(--accent);background:rgba(45,212,191,0.05);border-radius:0 8px 8px 0;padding:1rem 1.2rem;margin:1rem 0;font-size:0.92rem;}
+  .highlight-box.yellow{border-color:var(--py-yellow);background:rgba(255,212,59,0.05);}
+  .highlight-box.red{border-color:var(--red);background:rgba(248,113,113,0.07);}
+  .highlight-box.green{border-color:var(--green);background:rgba(52,211,153,0.06);}
+  .highlight-box.orange{border-color:var(--orange);background:rgba(251,146,60,0.05);}
+  .table-wrap{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;overflow:hidden;overflow-x:auto;}
+  table{width:100%;border-collapse:collapse;font-size:0.88rem;}
+  th{padding:0.6rem 1rem;text-align:left;font-size:0.75rem;color:var(--text-muted);font-weight:600;border-bottom:1px solid var(--border);}
+  td{padding:0.6rem 1rem;border-bottom:1px solid rgba(255,255,255,0.04);font-family:'Space Mono',monospace;font-size:0.82rem;}
+  tr:last-child td{border-bottom:none;}
+  td:first-child{color:var(--accent);}
+  td:last-child{color:var(--text-muted);font-family:'DM Sans',sans-serif;}
+  .modes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(260px,100%),1fr));gap:1rem;margin:1.5rem 0;}
+  .mode-card{border-radius:12px;padding:1.3rem;border:1px solid;position:relative;overflow:hidden;}
+  .mode-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+  .mode-card.read{background:rgba(45,212,191,0.06);border-color:rgba(45,212,191,0.25);}
+  .mode-card.read::after{background:linear-gradient(90deg,#2dd4bf,#5eead4);}
+  .mode-card.write{background:rgba(255,212,59,0.06);border-color:rgba(255,212,59,0.25);}
+  .mode-card.write::after{background:linear-gradient(90deg,#FFD43B,#FFE873);}
+  .mode-card.append{background:rgba(52,211,153,0.07);border-color:rgba(52,211,153,0.25);}
+  .mode-card.append::after{background:linear-gradient(90deg,#34d399,#6ee7b7);}
+  .mode-card.rw{background:rgba(167,139,250,0.07);border-color:rgba(167,139,250,0.25);}
+  .mode-card.rw::after{background:linear-gradient(90deg,#a78bfa,#c4b5fd);}
+  .mode-badge{font-family:'Space Mono',monospace;font-size:1.1rem;font-weight:700;margin-bottom:0.4rem;}
+  .read .mode-badge{color:var(--teal);}
+  .write .mode-badge{color:var(--py-yellow);}
+  .append .mode-badge{color:var(--green);}
+  .rw .mode-badge{color:var(--purple);}
+  .mode-name{font-size:0.85rem;font-weight:600;color:var(--text);margin-bottom:0.4rem;}
+  .mode-desc{font-size:0.82rem;color:var(--text-muted);line-height:1.5;}
+  .pros-cons{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0;}
+  .pros-cons-card{border-radius:12px;padding:1.4rem;border:1px solid;}
+  .pros-cons-card.pros{background:rgba(52,211,153,0.06);border-color:rgba(52,211,153,0.2);}
+  .pros-cons-card.cons{background:rgba(248,113,113,0.06);border-color:rgba(248,113,113,0.2);}
+  .pros-cons-title{font-family:'Space Mono',monospace;font-size:0.85rem;font-weight:700;margin-bottom:0.8rem;}
+  .pros .pros-cons-title{color:var(--green);}
+  .cons .pros-cons-title{color:var(--red);}
+  .pros-cons-card ul{padding-left:1.2rem;color:var(--text-muted);font-size:0.85rem;line-height:1.8;}
+  .terminal-wrapper{background:#0d1117;border:1px solid rgba(255,255,255,0.12);border-radius:16px;overflow:hidden;margin-top:1rem;}
+  .terminal-header{background:rgba(255,255,255,0.05);padding:0.8rem 1.2rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.08);}
+  .terminal-title{font-family:'Space Mono',monospace;font-size:0.75rem;color:var(--accent);display:flex;align-items:center;gap:0.5rem;}
+  .term-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite;}
+  .terminal-body{padding:1rem;}
+  #py-output{font-family:'Space Mono',monospace;font-size:0.82rem;color:#a3e635;min-height:60px;max-height:200px;overflow-y:auto;padding:0.5rem 0;white-space:pre-wrap;line-height:1.7;}
+  #py-output.error{color:var(--red);}
+  .terminal-input-row{display:flex;align-items:flex-start;gap:0.5rem;margin-top:0.5rem;border-top:1px solid rgba(255,255,255,0.07);padding-top:0.8rem;}
+  .term-prompt{font-family:'Space Mono',monospace;font-size:0.82rem;color:var(--accent);padding-top:2px;flex-shrink:0;}
+  #py-code{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-family:'Space Mono',monospace;font-size:0.82rem;resize:vertical;min-height:80px;line-height:1.7;}
+  .term-btns{display:flex;gap:0.5rem;margin-top:0.8rem;padding-top:0.5rem;border-top:1px solid rgba(255,255,255,0.07);}
+  .btn-run{background:var(--accent);color:#0b0f1a;border:none;border-radius:8px;padding:0.5rem 1.2rem;font-family:'Space Mono',monospace;font-size:0.78rem;font-weight:700;cursor:pointer;transition:opacity 0.2s;}
+  .btn-run:hover{opacity:0.85;}
+  .btn-clear{background:transparent;color:var(--text-muted);border:1px solid var(--border);border-radius:8px;padding:0.5rem 1rem;font-family:'Space Mono',monospace;font-size:0.78rem;cursor:pointer;}
+  .snippet-btns{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.5rem;}
+  .snip-btn{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:var(--text-muted);font-family:'Space Mono',monospace;font-size:0.7rem;padding:0.25rem 0.6rem;cursor:pointer;transition:all 0.2s;}
+  .snip-btn:hover{background:rgba(45,212,191,0.1);border-color:var(--accent);color:var(--accent);}
+  .lec-nav{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:4rem;padding:2rem 0 1rem;border-top:1px solid var(--border);}
+  .lec-nav-btn{display:inline-flex;align-items:center;gap:0.5rem;padding:0.75rem 1.5rem;border-radius:10px;font-family:'Space Mono',monospace;font-size:0.78rem;font-weight:700;text-decoration:none;transition:all 0.2s;white-space:nowrap;}
+  .lec-nav-btn.prev,.lec-nav-btn.home{background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text-muted);}
+  .lec-nav-btn:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,0.25);}
+  .lec-nav-spacer{flex:1;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+  @media (max-width:768px){
+    nav{padding:0.8rem 1.2rem;}
+    .nav-lec{display:none;}
+    .lec-hero{padding:2.5rem 1.2rem 2rem;}
+    .lec-hero::before{font-size:7rem;right:1rem;}
+    main{padding:2rem 1rem 4rem;}
+    .section{margin-bottom:2.5rem;}
+    .section h2{font-size:1.2rem;}
+    .code-body{font-size:0.75rem !important;padding:0.9rem 1rem !important;white-space:pre-wrap !important;word-break:break-word !important;overflow-x:visible !important;}
+    .pros-cons{grid-template-columns:1fr;}
+    .lec-nav{flex-wrap:wrap;gap:0.6rem;}
+    .lec-nav-btn{font-size:0.7rem;padding:0.6rem 1rem;}
+  }
+  @media (max-width:480px){
+    .lec-hero h1{font-size:1.7rem;}
+    .lec-nav{flex-direction:column;align-items:stretch;}
+    .lec-nav-btn{justify-content:center;}
+    .lec-nav-spacer{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-back" href="index.html">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Back to course
+  </a>
+  <span class="nav-title">DS502</span>
+  <span class="nav-lec">Lecture 08 / 08</span>
+</nav>
+
+<header class="lec-hero">
+  <div class="lec-num">// lecture 08</div>
+  <h1>File Handling in <em>Python</em></h1>
+  <p>Read from and write to files on disk. Manage the data flow between your program and the file system safely and efficiently using Python's built-in file tools.</p>
+  <div class="topics-row">
+    <span class="t-chip">open()</span>
+    <span class="t-chip">read</span>
+    <span class="t-chip">write</span>
+    <span class="t-chip">append</span>
+    <span class="t-chip">close()</span>
+    <span class="t-chip">with statement</span>
+    <span class="t-chip">file modes</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">📁</div>
+      <h2>What Is File Handling?</h2>
+    </div>
+    <p class="prose">File handling is the ability to <strong>create, open, read, write, and close files</strong> stored on your computer's disk. It lets your program persist data beyond a single run — saving results, reading configuration, logging events, and more.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Operation</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td>Creating</td><td style="color:var(--text-muted);font-family:'DM Sans',sans-serif">Make a new file on disk</td></tr>
+          <tr><td>Opening</td><td style="color:var(--text-muted);font-family:'DM Sans',sans-serif">Establish a connection between your program and a file</td></tr>
+          <tr><td>Reading</td><td style="color:var(--text-muted);font-family:'DM Sans',sans-serif">Pull content from the file into your program</td></tr>
+          <tr><td>Writing</td><td style="color:var(--text-muted);font-family:'DM Sans',sans-serif">Push data from your program into the file</td></tr>
+          <tr><td>Closing</td><td style="color:var(--text-muted);font-family:'DM Sans',sans-serif">Release the file resource so others can use it</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- OPEN MODES -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🔓</div>
+      <h2>Opening a File — Modes</h2>
+    </div>
+    <p class="prose">The built-in <code style="font-family:Space Mono,monospace;font-size:0.85em;color:var(--accent)">open()</code> function requires a <strong>file path</strong> and a <strong>mode</strong>. The mode controls what you're allowed to do with the file.</p>
+
+    <div class="modes-grid">
+      <div class="mode-card read">
+        <div class="mode-badge">"r"</div>
+        <div class="mode-name">Read only</div>
+        <div class="mode-desc">Opens for reading. File must already exist — raises an error otherwise.</div>
+      </div>
+      <div class="mode-card write">
+        <div class="mode-badge">"w"</div>
+        <div class="mode-name">Write</div>
+        <div class="mode-desc">Opens for writing. Creates a new file or <strong>erases</strong> the existing one first.</div>
+      </div>
+      <div class="mode-card append">
+        <div class="mode-badge">"a"</div>
+        <div class="mode-name">Append</div>
+        <div class="mode-desc">Opens for appending data to the end. Creates the file if it doesn't exist.</div>
+      </div>
+      <div class="mode-card rw">
+        <div class="mode-badge">"r+"</div>
+        <div class="mode-name">Read + Write</div>
+        <div class="mode-desc">Opens for both reading and writing. File must already exist.</div>
+      </div>
+      <div class="mode-card rw" style="background:rgba(69,132,182,0.07);border-color:rgba(69,132,182,0.25);">
+        <div class="mode-badge" style="color:var(--py-blue-light)">"w+"</div>
+        <div class="mode-name">Write + Read</div>
+        <div class="mode-desc">Opens for writing and reading. Creates or truncates the file.</div>
+      </div>
+      <div class="mode-card append" style="background:rgba(251,146,60,0.06);border-color:rgba(251,146,60,0.25);">
+        <div class="mode-badge" style="color:var(--orange)">"a+"</div>
+        <div class="mode-name">Append + Read</div>
+        <div class="mode-desc">Opens for appending and reading. Creates the file if it doesn't exist.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- READING -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">📖</div>
+      <h2>Reading a File</h2>
+    </div>
+    <p class="prose">Open the file in read mode, call <code style="font-family:Space Mono,monospace;font-size:0.85em;color:var(--accent)">file.read()</code> to get all content as a single string, then close it. You can also use <code style="font-family:Space Mono,monospace;font-size:0.85em">readline()</code> to read one line at a time, or <code style="font-family:Space Mono,monospace;font-size:0.85em">readlines()</code> to get a list of all lines.</p>
+
+    <div class="code-block">
+      <div class="code-header"><div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div><span class="code-label">reading a file</span></div>
+      <div class="code-body"><span class="var">file</span> = <span class="fn">open</span>(<span class="str">"DS502.txt"</span>, <span class="str">"r"</span>)
+<span class="var">content</span> = <span class="var">file</span>.<span class="fn">read</span>()       <span class="cm"># entire file as one string</span>
+<span class="fn">print</span>(<span class="var">content</span>)
+<span class="var">file</span>.<span class="fn">close</span>()
+
+<span class="cm"># Read line by line</span>
+<span class="var">file</span> = <span class="fn">open</span>(<span class="str">"DS502.txt"</span>, <span class="str">"r"</span>)
+<span class="kw">for</span> <span class="var">line</span> <span class="kw">in</span> <span class="var">file</span>:
+    <span class="fn">print</span>(<span class="var">line</span>.<span class="fn">strip</span>())
+<span class="var">file</span>.<span class="fn">close</span>()</div>
+    </div>
+  </div>
+
+  <!-- WRITING -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">✍️</div>
+      <h2>Writing to a File</h2>
+    </div>
+    <p class="prose">Open the file in write mode <code style="font-family:Space Mono,monospace;font-size:0.85em;color:var(--py-yellow)">"w"</code> and call <code style="font-family:Space Mono,monospace;font-size:0.85em;color:var(--accent)">file.write()</code>. Be careful — write mode <strong>erases</strong> any existing content first. To add without erasing, use append mode instead.</p>
+
+    <div class="code-block">
+      <div class="code-header"><div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div><span class="code-label">writing to a file</span></div>
+      <div class="code-body"><span class="cm"># Write mode — creates or overwrites</span>
+<span class="var">file</span> = <span class="fn">open</span>(<span class="str">"DS502.txt"</span>, <span class="str">"w"</span>)
+<span class="var">file</span>.<span class="fn">write</span>(<span class="str">"Hello, World!\n"</span>)
+<span class="var">file</span>.<span class="fn">write</span>(<span class="str">"DS502 - Programming Foundation\n"</span>)
+<span class="var">file</span>.<span class="fn">close</span>()</div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header"><div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div><span class="code-label">append mode — add without erasing</span></div>
+      <div class="code-body"><span class="cm"># Append mode — preserves existing content</span>
+<span class="var">file</span> = <span class="fn">open</span>(<span class="str">"DS502.txt"</span>, <span class="str">"a"</span>)
+<span class="var">file</span>.<span class="fn">write</span>(<span class="str">"This will add this line\n"</span>)
+<span class="var">file</span>.<span class="fn">close</span>()</div>
+    </div>
+
+    <div class="highlight-box yellow">
+      ⚠️ <strong>Write mode erases first!</strong> If you open an existing file with <code style="font-family:Space Mono,monospace;font-size:0.85em">"w"</code>, all its previous content is gone immediately. Use <code style="font-family:Space Mono,monospace;font-size:0.85em">"a"</code> to append safely.
+    </div>
+  </div>
+
+  <!-- CLOSING / WITH STATEMENT -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🔒</div>
+      <h2>Closing a File — The <code style="font-size:1.1rem">with</code> Statement</h2>
+    </div>
+    <p class="prose">Always close files after use to release system resources and ensure your data is saved. The <code style="font-family:Space Mono,monospace;font-size:0.85em;color:var(--accent)">with</code> statement is the preferred approach — it <strong>automatically closes the file</strong> when the block exits, even if an error occurs.</p>
+
+    <div class="code-block">
+      <div class="code-header"><div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div><span class="code-label">manual close vs. with statement</span></div>
+      <div class="code-body"><span class="cm"># Manual — easy to forget close()</span>
+<span class="var">file</span> = <span class="fn">open</span>(<span class="str">"DS502.txt"</span>, <span class="str">"r"</span>)
+<span class="var">content</span> = <span class="var">file</span>.<span class="fn">read</span>()
+<span class="fn">print</span>(<span class="var">content</span>)
+<span class="var">file</span>.<span class="fn">close</span>()   <span class="cm"># must remember this!</span>
+
+<span class="cm"># Better — with handles closing automatically</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"DS502.txt"</span>, <span class="str">"r"</span>) <span class="kw">as</span> <span class="var">file</span>:
+    <span class="var">content</span> = <span class="var">file</span>.<span class="fn">read</span>()
+    <span class="fn">print</span>(<span class="var">content</span>)
+<span class="cm"># file is automatically closed here — even on error</span></div>
+    </div>
+
+    <div class="highlight-box green">
+      ✅ <strong>Best practice:</strong> Always use the <code style="font-family:Space Mono,monospace;font-size:0.85em">with open(...) as file:</code> pattern. It prevents resource leaks and file corruption, and your code is shorter and safer.
+    </div>
+  </div>
+
+  <!-- ADVANTAGES & DISADVANTAGES -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">⚖️</div>
+      <h2>Advantages &amp; Disadvantages</h2>
+    </div>
+
+    <div class="pros-cons">
+      <div class="pros-cons-card pros">
+        <div class="pros-cons-title">✅ Advantages</div>
+        <ul>
+          <li><strong>Versatile</strong> — create, read, write, append, rename, delete</li>
+          <li><strong>Flexible</strong> — works with text files, binary files, CSV, and more</li>
+          <li><strong>User-friendly</strong> — simple, readable API with <code style="font-family:Space Mono,monospace;font-size:0.85em">open()</code></li>
+          <li><strong>Cross-platform</strong> — same code runs on Windows, Mac, and Linux</li>
+        </ul>
+      </div>
+      <div class="pros-cons-card cons">
+        <div class="pros-cons-title">❌ Disadvantages</div>
+        <ul>
+          <li><strong>Error-prone</strong> — permissions, missing files, and locks can cause failures</li>
+          <li><strong>Security risks</strong> — user input in file paths can expose sensitive data</li>
+          <li><strong>Complexity</strong> — advanced formats (binary, Excel) require more care</li>
+          <li><strong>Performance</strong> — slower than in-memory operations, especially for large files</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- FULL EXAMPLE -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🧪</div>
+      <h2>Putting It Together</h2>
+    </div>
+    <p class="prose">A complete workflow: write data, append more, then read it all back.</p>
+
+    <div class="code-block">
+      <div class="code-header"><div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div><span class="code-label">write → append → read</span></div>
+      <div class="code-body"><span class="cm"># 1. Write initial content</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"students.txt"</span>, <span class="str">"w"</span>) <span class="kw">as</span> <span class="var">f</span>:
+    <span class="var">f</span>.<span class="fn">write</span>(<span class="str">"Ahmed\n"</span>)
+    <span class="var">f</span>.<span class="fn">write</span>(<span class="str">"Salma\n"</span>)
+
+<span class="cm"># 2. Append a new student</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"students.txt"</span>, <span class="str">"a"</span>) <span class="kw">as</span> <span class="var">f</span>:
+    <span class="var">f</span>.<span class="fn">write</span>(<span class="str">"Omar\n"</span>)
+
+<span class="cm"># 3. Read all students back</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"students.txt"</span>, <span class="str">"r"</span>) <span class="kw">as</span> <span class="var">f</span>:
+    <span class="var">names</span> = <span class="var">f</span>.<span class="fn">readlines</span>()
+
+<span class="fn">print</span>(<span class="str">"Enrolled students:"</span>)
+<span class="kw">for</span> <span class="var">i</span>, <span class="var">name</span> <span class="kw">in</span> <span class="fn">enumerate</span>(<span class="var">names</span>, <span class="num">1</span>):
+    <span class="fn">print</span>(<span class="str">f"  <span class="var">{i}</span>. <span class="var">{name.strip()}</span>"</span>)</div>
+    </div>
+  </div>
+
+  <!-- LIVE TERMINAL -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">⌨️</div>
+      <h2>Try It — Live Python Terminal</h2>
+    </div>
+    <p class="prose">Note: Skulpt (the in-browser Python engine) has limited file I/O support. The snippets below demonstrate the patterns using in-memory simulation so you can see the logic clearly.</p>
+
+    <div class="terminal-wrapper">
+      <div class="terminal-header">
+        <div class="terminal-title"><span class="term-dot"></span> Python 3 · Live Terminal</div>
+        <span style="font-family:Space Mono,monospace;font-size:0.7rem;color:var(--text-muted)">Ctrl+Enter to run</span>
+      </div>
+      <div class="terminal-body">
+        <div class="snippet-btns">
+          <button class="snip-btn" onclick="loadSnip('read_sim')">Read (simulated)</button>
+          <button class="snip-btn" onclick="loadSnip('write_sim')">Write (simulated)</button>
+          <button class="snip-btn" onclick="loadSnip('append_sim')">Append (simulated)</button>
+          <button class="snip-btn" onclick="loadSnip('modes')">Mode reference</button>
+          <button class="snip-btn" onclick="loadSnip('full')">Full workflow</button>
+        </div>
+        <div id="py-output"># Output will appear here...</div>
+        <div class="terminal-input-row">
+          <span class="term-prompt">&gt;&gt;&gt;</span>
+          <textarea id="py-code" spellcheck="false"># File patterns demonstrated with in-memory simulation
+lines = ["Line 1: Hello from DS502\n", "Line 2: File Handling in Python\n"]
+
+print("=== Reading file content ===")
+for line in lines:
+    print(line.strip())
+
+print("\n=== Counting lines ===")
+print(f"Total lines: {len(lines)}")</textarea>
+        </div>
+        <div class="term-btns">
+          <button class="btn-run" onclick="runPython()">&#9654; Run</button>
+          <button class="btn-clear" onclick="clearTerminal()">&#10005; Clear</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LECTURE NAVIGATION -->
+  <div class="lec-nav">
+    <a href="lecture7.html" class="lec-nav-btn prev">&#8592; Lecture 07</a>
+    <a href="index.html" class="lec-nav-btn home">&#8962; Course Home</a>
+    <span class="lec-nav-spacer"></span>
+  </div>
+
+</main>
+
+<script>
+const snippets = {
+  read_sim: `# Simulating reading a file (in-memory)\ncontent = "DS502: Programming Foundation\\nLecture 8: File Handling\\nCairo University"\n\nprint("=== file.read() simulation ===")\nprint(content)\n\nprint("\\n=== Iterating line by line ===")\nfor line in content.split("\\n"):\n    print(line.strip())`,
+  write_sim: `# Simulating write mode — overwrites existing content\nfile_content = []\n\ndef write_to_file(text):\n    file_content.clear()  # simulate overwrite\n    file_content.append(text)\n\nwrite_to_file("Hello, World!")\nprint("After write:", file_content)\n\nwrite_to_file("New content replaces old.")\nprint("After second write:", file_content)`,
+  append_sim: `# Simulating append mode — adds to existing content\nfile_content = ["First line\\n"]\n\ndef append_to_file(text):\n    file_content.append(text)\n\nappend_to_file("Second line\\n")\nappend_to_file("Third line\\n")\n\nprint("All lines:")\nfor i, line in enumerate(file_content, 1):\n    print(f"  {i}: {line.strip()}")`,
+  modes: `modes = {\n    '"r"':  "Read only. File must exist.",\n    '"w"':  "Write only. Creates or overwrites.",\n    '"a"':  "Append. Creates if missing.",\n    '"r+"': "Read + Write. File must exist.",\n    '"w+"': "Write + Read. Creates or truncates.",\n    '"a+"': "Append + Read. Creates if missing.",\n}\n\nprint("Python file modes:")\nfor mode, desc in modes.items():\n    print(f"  {mode:6} -> {desc}")`,
+  full: `# Full workflow simulation\nstudents = []\n\n# Step 1: write\nstudents = ["Ahmed", "Salma"]\nprint("After write:", students)\n\n# Step 2: append\nstudents.append("Omar")\nprint("After append:", students)\n\n# Step 3: read / display\nprint("\\nEnrolled students:")\nfor i, name in enumerate(students, 1):\n    print(f"  {i}. {name}")`
+};
+
+function loadSnip(k) { document.getElementById('py-code').value = snippets[k]; }
+
+function runPython() {
+  const code = document.getElementById('py-code').value;
+  const out = document.getElementById('py-output');
+  out.className = '';
+  let outText = '';
+  function outf(text) { outText += text; }
+  function builtinRead(x) {
+    if (Sk.builtinFiles === undefined || Sk.builtinFiles['files'][x] === undefined)
+      throw "File not found: '" + x + "'";
+    return Sk.builtinFiles['files'][x];
+  }
+  Sk.configure({ output: outf, read: builtinRead, __future__: Sk.python3 });
+  Sk.misceval.asyncToPromise(function() {
+    return Sk.importMainWithBody('<stdin>', false, code, true);
+  }).then(function() {
+    out.textContent = outText || '(no output)';
+    out.className = '';
+  }).catch(function(e) {
+    out.textContent = e.toString();
+    out.className = 'error';
+  });
+}
+
+function clearTerminal() {
+  document.getElementById('py-output').textContent = '# Output will appear here...';
+  document.getElementById('py-output').className = '';
+  document.getElementById('py-code').value = '';
+}
+
+document.getElementById('py-code').addEventListener('keydown', function(e) {
+  if (e.key === 'Tab') {
+    e.preventDefault();
+    const s = this.selectionStart;
+    this.value = this.value.substring(0, s) + '    ' + this.value.substring(this.selectionEnd);
+    this.selectionStart = this.selectionEnd = s + 4;
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') runPython();
+});
+</script>
+</body>
+</html>
