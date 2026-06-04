@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lecture 7 – Classes</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"></script>
+<style>
+  :root{--bg:#0b0f1a;--bg2:#111827;--bg3:#1a2236;--py-yellow:#FFD43B;--py-blue:#4584b6;--py-blue-light:#5ba3d9;--text:#e2e8f0;--text-muted:#94a3b8;--border:rgba(255,255,255,0.07);--card-bg:rgba(26,34,54,0.8);--green:#34d399;--red:#f87171;--purple:#a78bfa;--orange:#fb923c;--teal:#2dd4bf;--accent:#a78bfa;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7;}
+  a{text-decoration:none;}
+  nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 2.5rem;background:rgba(11,15,26,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+  .nav-back{display:flex;align-items:center;gap:0.5rem;color:var(--text-muted);font-size:0.9rem;transition:color 0.2s;}
+  .nav-back:hover{color:var(--accent);}
+  .nav-title{font-family:'Space Mono',monospace;font-size:0.85rem;color:var(--py-yellow);}
+  .nav-lec{font-family:'Space Mono',monospace;font-size:0.75rem;color:var(--text-muted);}
+  .lec-hero{background:linear-gradient(135deg,#0b0f1a 0%,#130b1a 100%);border-bottom:1px solid var(--border);padding:4rem 2.5rem 3rem;position:relative;overflow:hidden;}
+  .lec-hero::before{content:'07';position:absolute;right:3rem;top:50%;transform:translateY(-50%);font-family:'Space Mono',monospace;font-size:12rem;font-weight:700;color:rgba(167,139,250,0.04);line-height:1;pointer-events:none;}
+  .lec-num{font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:3px;color:var(--accent);text-transform:uppercase;margin-bottom:0.8rem;}
+  .lec-hero h1{font-size:clamp(2rem,4vw,3.2rem);font-weight:700;letter-spacing:-1.5px;margin-bottom:1rem;}
+  .lec-hero h1 em{font-style:normal;color:var(--accent);}
+  .lec-hero p{color:var(--text-muted);max-width:560px;font-size:1rem;}
+  .topics-row{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:1.5rem;}
+  .t-chip{font-family:'Space Mono',monospace;font-size:0.72rem;padding:0.3rem 0.8rem;border-radius:100px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:var(--text-muted);}
+  main{max-width:900px;margin:0 auto;padding:3rem 2rem 6rem;}
+  .section{margin-bottom:4rem;}
+  .section-header{display:flex;align-items:center;gap:0.8rem;margin-bottom:1.5rem;}
+  .section-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;background:rgba(167,139,250,0.12);}
+  .section h2{font-size:1.5rem;font-weight:700;letter-spacing:-0.5px;}
+  .prose{color:var(--text-muted);font-size:0.97rem;line-height:1.8;margin-bottom:1.2rem;}
+  .prose strong{color:var(--text);}
+  .code-block{background:#0d1117;border:1px solid rgba(255,255,255,0.1);border-radius:12px;overflow:hidden;margin:1.2rem 0;}
+  .code-header{display:flex;align-items:center;justify-content:space-between;padding:0.7rem 1rem;background:rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.07);}
+  .code-dots{display:flex;gap:6px;}
+  .code-dot{width:10px;height:10px;border-radius:50%;}
+  .code-dot.r{background:#ff5f57;}.code-dot.y{background:#febc2e;}.code-dot.g{background:#28c840;}
+  .code-label{font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--text-muted);}
+  .code-body{padding:1.2rem 1.5rem;font-family:'Space Mono',monospace;font-size:0.85rem;line-height:1.8;overflow-x:auto;white-space:pre;}
+  .kw{color:#ff79c6;}.fn{color:#50fa7b;}.str{color:#f1fa8c;}.cm{color:#6272a4;}.num{color:#bd93f9;}.var{color:#8be9fd;}.cls{color:#a78bfa;}
+  .highlight-box{border-left:3px solid var(--accent);background:rgba(167,139,250,0.05);border-radius:0 8px 8px 0;padding:1rem 1.2rem;margin:1rem 0;font-size:0.92rem;}
+  .highlight-box.yellow{border-color:var(--py-yellow);background:rgba(255,212,59,0.05);}
+  .highlight-box.green{border-color:var(--green);background:rgba(52,211,153,0.06);}
+  .highlight-box.orange{border-color:var(--orange);background:rgba(251,146,60,0.05);}
+  .highlight-box.red{border-color:var(--red);background:rgba(248,113,113,0.07);}
+  .concept-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(220px,100%),1fr));gap:1rem;margin:1.5rem 0;}
+  .concept-card{border-radius:12px;padding:1.4rem;border:1px solid;position:relative;overflow:hidden;}
+  .concept-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+  .concept-card.c1{background:rgba(167,139,250,0.07);border-color:rgba(167,139,250,0.25);}
+  .concept-card.c1::after{background:linear-gradient(90deg,#a78bfa,#c4b5fd);}
+  .concept-card.c2{background:rgba(255,212,59,0.06);border-color:rgba(255,212,59,0.25);}
+  .concept-card.c2::after{background:linear-gradient(90deg,#FFD43B,#FFE873);}
+  .concept-card.c3{background:rgba(52,211,153,0.07);border-color:rgba(52,211,153,0.25);}
+  .concept-card.c3::after{background:linear-gradient(90deg,#34d399,#6ee7b7);}
+  .concept-card.c4{background:rgba(251,146,60,0.07);border-color:rgba(251,146,60,0.25);}
+  .concept-card.c4::after{background:linear-gradient(90deg,#fb923c,#fdba74);}
+  .concept-title{font-family:'Space Mono',monospace;font-size:0.9rem;font-weight:700;margin-bottom:0.5rem;}
+  .c1 .concept-title{color:var(--accent);}
+  .c2 .concept-title{color:var(--py-yellow);}
+  .c3 .concept-title{color:var(--green);}
+  .c4 .concept-title{color:var(--orange);}
+  .concept-desc{font-size:0.83rem;color:var(--text-muted);line-height:1.5;}
+  .fn-anatomy{display:grid;grid-template-columns:1fr;gap:0;background:#0d1117;border:1px solid rgba(255,255,255,0.1);border-radius:12px;overflow:hidden;margin:1.2rem 0;font-family:'Space Mono',monospace;font-size:0.85rem;line-height:1.8;}
+  .fn-line{display:flex;align-items:stretch;border-bottom:1px solid rgba(255,255,255,0.04);}
+  .fn-line:last-child{border-bottom:none;}
+  .fn-code{padding:0.5rem 1.5rem;flex:1;white-space:pre;}
+  .fn-anno{padding:0.5rem 1.2rem;border-left:1px solid rgba(255,255,255,0.07);font-family:'DM Sans',sans-serif;font-size:0.8rem;color:var(--text-muted);display:flex;align-items:center;min-width:200px;gap:0.5rem;}
+  .fn-anno .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+  .table-wrap{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;overflow:hidden;overflow-x:auto;}
+  table{width:100%;border-collapse:collapse;font-size:0.88rem;}
+  th{padding:0.6rem 1rem;text-align:left;font-size:0.75rem;color:var(--text-muted);font-weight:600;border-bottom:1px solid var(--border);}
+  td{padding:0.6rem 1rem;border-bottom:1px solid rgba(255,255,255,0.04);font-family:'Space Mono',monospace;font-size:0.82rem;}
+  tr:last-child td{border-bottom:none;}
+  td:first-child{color:var(--accent);}
+  td:last-child{color:var(--text-muted);font-family:'DM Sans',sans-serif;}
+  .diagram{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:2rem;margin:1.2rem 0;display:flex;justify-content:center;overflow-x:auto;}
+  .terminal-wrapper{background:#0d1117;border:1px solid rgba(255,255,255,0.12);border-radius:16px;overflow:hidden;margin-top:1rem;}
+  .terminal-header{background:rgba(255,255,255,0.05);padding:0.8rem 1.2rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.08);}
+  .terminal-title{font-family:'Space Mono',monospace;font-size:0.75rem;color:var(--accent);display:flex;align-items:center;gap:0.5rem;}
+  .term-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite;}
+  .terminal-body{padding:1rem;}
+  #py-output{font-family:'Space Mono',monospace;font-size:0.82rem;color:#a3e635;min-height:60px;max-height:200px;overflow-y:auto;padding:0.5rem 0;white-space:pre-wrap;line-height:1.7;}
+  #py-output.error{color:var(--red);}
+  .terminal-input-row{display:flex;align-items:flex-start;gap:0.5rem;margin-top:0.5rem;border-top:1px solid rgba(255,255,255,0.07);padding-top:0.8rem;}
+  .term-prompt{font-family:'Space Mono',monospace;font-size:0.82rem;color:var(--accent);padding-top:2px;flex-shrink:0;}
+  #py-code{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-family:'Space Mono',monospace;font-size:0.82rem;resize:vertical;min-height:80px;line-height:1.7;}
+  .term-btns{display:flex;gap:0.5rem;margin-top:0.8rem;padding-top:0.5rem;border-top:1px solid rgba(255,255,255,0.07);}
+  .btn-run{background:var(--accent);color:#0b0f1a;border:none;border-radius:8px;padding:0.5rem 1.2rem;font-family:'Space Mono',monospace;font-size:0.78rem;font-weight:700;cursor:pointer;transition:opacity 0.2s;}
+  .btn-run:hover{opacity:0.85;}
+  .btn-clear{background:transparent;color:var(--text-muted);border:1px solid var(--border);border-radius:8px;padding:0.5rem 1rem;font-family:'Space Mono',monospace;font-size:0.78rem;cursor:pointer;}
+  .snippet-btns{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.5rem;}
+  .snip-btn{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:var(--text-muted);font-family:'Space Mono',monospace;font-size:0.7rem;padding:0.25rem 0.6rem;cursor:pointer;transition:all 0.2s;}
+  .snip-btn:hover{background:rgba(167,139,250,0.1);border-color:var(--accent);color:var(--accent);}
+  .lec-nav{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:4rem;padding:2rem 0 1rem;border-top:1px solid var(--border);}
+  .lec-nav-btn{display:inline-flex;align-items:center;gap:0.5rem;padding:0.75rem 1.5rem;border-radius:10px;font-family:'Space Mono',monospace;font-size:0.78rem;font-weight:700;text-decoration:none;transition:all 0.2s;white-space:nowrap;}
+  .lec-nav-btn.prev,.lec-nav-btn.home{background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text-muted);}
+  .lec-nav-btn.next{background:var(--accent);color:#0b0f1a;border:1px solid transparent;}
+  .lec-nav-btn:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,0.25);}
+  .lec-nav-spacer{flex:1;}
+  .assignment-box{background:linear-gradient(135deg,rgba(167,139,250,0.08),rgba(26,34,54,0.8));border:1px solid rgba(167,139,250,0.3);border-radius:16px;padding:2rem;margin:1.5rem 0;}
+  .assignment-box h3{font-size:1.1rem;font-weight:700;color:var(--accent);margin-bottom:1rem;}
+  .assignment-box ol{padding-left:1.4rem;color:var(--text-muted);font-size:0.93rem;line-height:1.9;}
+  .assignment-box ol li{margin-bottom:0.4rem;}
+  .submission-info{display:flex;flex-wrap:wrap;gap:0.8rem;margin-top:1.2rem;}
+  .sub-chip{font-family:'Space Mono',monospace;font-size:0.75rem;padding:0.35rem 0.8rem;border-radius:8px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:var(--text-muted);}
+  .sub-chip strong{color:var(--text);}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+  @media (max-width:768px){
+    nav{padding:0.8rem 1.2rem;}
+    .nav-lec{display:none;}
+    .lec-hero{padding:2.5rem 1.2rem 2rem;}
+    .lec-hero::before{font-size:7rem;right:1rem;}
+    main{padding:2rem 1rem 4rem;}
+    .section{margin-bottom:2.5rem;}
+    .section h2{font-size:1.2rem;}
+    .code-body{font-size:0.75rem !important;padding:0.9rem 1rem !important;white-space:pre-wrap !important;word-break:break-word !important;overflow-x:visible !important;}
+    .fn-anno{display:none;}
+    .lec-nav{flex-wrap:wrap;gap:0.6rem;}
+    .lec-nav-btn{font-size:0.7rem;padding:0.6rem 1rem;}
+  }
+  @media (max-width:480px){
+    .lec-hero h1{font-size:1.7rem;}
+    .lec-nav{flex-direction:column;align-items:stretch;}
+    .lec-nav-btn{justify-content:center;}
+    .lec-nav-spacer{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-back" href="index.html">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Back to course
+  </a>
+  <span class="nav-title">DS502</span>
+  <span class="nav-lec">Lecture 07 / 08</span>
+</nav>
+
+<header class="lec-hero">
+  <div class="lec-num">// lecture 07</div>
+  <h1>Object-Oriented Programming &amp; <em>Classes</em></h1>
+  <p>Structure your programs by bundling data and behavior into objects. Learn to define classes, create instances, and use the core OOP pillars: encapsulation, inheritance, and polymorphism.</p>
+  <div class="topics-row">
+    <span class="t-chip">class</span>
+    <span class="t-chip">__init__</span>
+    <span class="t-chip">self</span>
+    <span class="t-chip">instances</span>
+    <span class="t-chip">attributes</span>
+    <span class="t-chip">methods</span>
+    <span class="t-chip">inheritance</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- WHAT IS OOP -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🌍</div>
+      <h2>What Is Object-Oriented Programming?</h2>
+    </div>
+    <p class="prose">Object-oriented programming (OOP) is a method of structuring a program by <strong>bundling related properties and behaviors into individual objects</strong>. Instead of writing a list of instructions, you model your program around real-world entities.</p>
+
+    <div class="concept-cards">
+      <div class="concept-card c1">
+        <div class="concept-title">Person</div>
+        <div class="concept-desc"><strong style="color:var(--text)">Properties:</strong> name, age, address<br><strong style="color:var(--text)">Behaviors:</strong> walk, talk, breathe, run</div>
+      </div>
+      <div class="concept-card c2">
+        <div class="concept-title">Email</div>
+        <div class="concept-desc"><strong style="color:var(--text)">Properties:</strong> recipient list, subject, body<br><strong style="color:var(--text)">Behaviors:</strong> add attachment, send</div>
+      </div>
+      <div class="concept-card c3">
+        <div class="concept-title">Bank Account</div>
+        <div class="concept-desc"><strong style="color:var(--text)">Properties:</strong> balance, owner, IBAN<br><strong style="color:var(--text)">Behaviors:</strong> deposit, withdraw, get balance</div>
+      </div>
+      <div class="concept-card c4">
+        <div class="concept-title">Restaurant</div>
+        <div class="concept-desc"><strong style="color:var(--text)">Properties:</strong> menu, tables, orders<br><strong style="color:var(--text)">Behaviors:</strong> add item, book table, take order</div>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      🏗️ <strong>The blueprint analogy:</strong> A <em>class</em> is like an architectural blueprint — it defines the structure. An <em>instance</em> (object) is the actual building constructed from that blueprint. You can build many buildings from one blueprint, each with its own address and paint color.
+    </div>
+  </div>
+
+  <!-- OOP PILLARS -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🏛️</div>
+      <h2>The Four Pillars of OOP</h2>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Pillar</th><th>What it means</th></tr></thead>
+        <tbody>
+          <tr><td>Class</td><td style="color:var(--text-muted);font-family:'DM Sans',sans-serif">A special data type that defines how to build a kind of object — its attributes and methods.</td></tr>
+          <tr><td>Instance</td><td style="color:var(--text-muted);font-family:'DM Sans',sans-serif">A concrete object created from a class. Many instances can share one class definition.</td></tr>
+          <tr><td>Inheritance</td><td style="color:var(--text-muted);font-family:'DM Sans',sans-serif">A class can derive properties and behaviors from another class, promoting code reuse.</td></tr>
+          <tr><td>Polymorphism</td><td style="color:var(--text-muted);font-family:'DM Sans',sans-serif">The same method name used across different types — each responding in its own way.</td></tr>
+          <tr><td>Encapsulation</td><td style="color:var(--text-muted);font-family:'DM Sans',sans-serif">Restricts direct access to variables and methods to prevent accidental data modification.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- DEFINING A CLASS -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">📐</div>
+      <h2>Defining a Class</h2>
+    </div>
+    <p class="prose">Use the <code style="font-family:Space Mono,monospace;font-size:0.85em;color:var(--accent)">class</code> keyword followed by the class name (by convention, use <strong>PascalCase</strong>). The body contains method definitions — just regular functions that live inside the class block.</p>
+
+    <div class="fn-anatomy">
+      <div class="fn-line">
+        <div class="fn-code"><span class="kw">class</span> <span class="cls">Person</span>:</div>
+        <div class="fn-anno"><span class="dot" style="background:var(--accent)"></span> <strong style="color:var(--accent)">class</strong> keyword + PascalCase name</div>
+      </div>
+      <div class="fn-line">
+        <div class="fn-code">    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="var">self</span>, <span class="var">name</span>, <span class="var">age</span>):</div>
+        <div class="fn-anno"><span class="dot" style="background:var(--py-yellow)"></span> Constructor — runs when object is created</div>
+      </div>
+      <div class="fn-line">
+        <div class="fn-code">        <span class="var">self</span>.<span class="var">name</span> = <span class="var">name</span></div>
+        <div class="fn-anno"><span class="dot" style="background:var(--py-blue-light)"></span> Data attribute — unique to each instance</div>
+      </div>
+      <div class="fn-line">
+        <div class="fn-code">        <span class="var">self</span>.<span class="var">age</span> = <span class="var">age</span></div>
+        <div class="fn-anno"><span class="dot" style="background:var(--py-blue-light)"></span> Another data attribute</div>
+      </div>
+      <div class="fn-line">
+        <div class="fn-code">    <span class="kw">def</span> <span class="fn">greet</span>(<span class="var">self</span>):</div>
+        <div class="fn-anno"><span class="dot" style="background:var(--green)"></span> Instance method — self is always first</div>
+      </div>
+      <div class="fn-line">
+        <div class="fn-code">        <span class="fn">print</span>(<span class="str">f"Hi, I'm <span class="var">{self.name}</span>!"</span>)</div>
+        <div class="fn-anno"><span class="dot" style="background:var(--green)"></span> Access attribute through self</div>
+      </div>
+    </div>
+
+    <div class="highlight-box yellow">
+      🔑 <strong>self</strong> is a reference to the current instance of the class. Every instance method must accept it as the first parameter — Python passes it automatically when you call the method. You don't include it in the call: <code style="font-family:Space Mono,monospace;font-size:0.85em">p.greet()</code>, not <code style="font-family:Space Mono,monospace;font-size:0.85em">p.greet(p)</code>.
+    </div>
+  </div>
+
+  <!-- INSTANTIATING OBJECTS -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">⚡</div>
+      <h2>Creating Instances (Instantiation)</h2>
+    </div>
+    <p class="prose">Use the class name with <code style="font-family:Space Mono,monospace;font-size:0.85em;color:var(--accent)">( )</code> notation to create an object. The arguments you pass go directly to <code style="font-family:Space Mono,monospace;font-size:0.85em">__init__</code>. You can create as many instances as you need — each is independent.</p>
+
+    <div class="code-block">
+      <div class="code-header"><div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div><span class="code-label">creating and using objects</span></div>
+      <div class="code-body"><span class="kw">class</span> <span class="cls">Person</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="var">self</span>, <span class="var">name</span>, <span class="var">age</span>, <span class="var">city</span>):
+        <span class="var">self</span>.<span class="var">name</span> = <span class="var">name</span>
+        <span class="var">self</span>.<span class="var">age</span>  = <span class="var">age</span>
+        <span class="var">self</span>.<span class="var">city</span> = <span class="var">city</span>
+
+    <span class="kw">def</span> <span class="fn">introduce</span>(<span class="var">self</span>):
+        <span class="fn">print</span>(<span class="str">f"I'm <span class="var">{self.name}</span>, <span class="var">{self.age}</span> years old from <span class="var">{self.city}</span>."</span>)
+
+<span class="cm"># Create two separate instances</span>
+<span class="var">p1</span> = <span class="cls">Person</span>(<span class="str">'Ahmed'</span>, <span class="num">24</span>, <span class="str">'Giza'</span>)
+<span class="var">p2</span> = <span class="cls">Person</span>(<span class="str">'Salma'</span>, <span class="num">30</span>, <span class="str">'Cairo'</span>)
+
+<span class="var">p1</span>.<span class="fn">introduce</span>()   <span class="cm"># I'm Ahmed, 24 years old from Giza.</span>
+<span class="var">p2</span>.<span class="fn">introduce</span>()   <span class="cm"># I'm Salma, 30 years old from Cairo.</span>
+<span class="fn">print</span>(<span class="var">p1</span>.<span class="var">name</span>)    <span class="cm"># Ahmed  — direct attribute access</span></div>
+    </div>
+
+    <!-- Instantiation diagram -->
+    <div class="diagram">
+      <svg viewBox="0 0 640 140" width="100%" style="max-width:620px" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="ma" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#a78bfa"/></marker>
+        </defs>
+        <!-- Class box -->
+        <rect x="10" y="30" width="180" height="80" rx="10" fill="rgba(167,139,250,0.08)" stroke="#a78bfa" stroke-width="1.5"/>
+        <text x="100" y="55" text-anchor="middle" fill="#a78bfa" font-family="Space Mono,monospace" font-size="11" font-weight="700">class Person</text>
+        <text x="100" y="74" text-anchor="middle" fill="#6272a4" font-family="Space Mono,monospace" font-size="9">__init__(name, age)</text>
+        <text x="100" y="90" text-anchor="middle" fill="#6272a4" font-family="Space Mono,monospace" font-size="9">introduce()</text>
+        <text x="100" y="106" text-anchor="middle" fill="#94a3b8" font-family="Space Mono,monospace" font-size="8">blueprint</text>
+        <!-- Arrow 1 -->
+        <line x1="190" y1="55" x2="265" y2="45" stroke="#a78bfa" stroke-width="1.5" marker-end="url(#ma)"/>
+        <!-- Instance 1 -->
+        <rect x="268" y="10" width="160" height="60" rx="8" fill="rgba(255,212,59,0.07)" stroke="#FFD43B" stroke-width="1.5"/>
+        <text x="348" y="32" text-anchor="middle" fill="#FFD43B" font-family="Space Mono,monospace" font-size="10" font-weight="700">p1 = Person(...)</text>
+        <text x="348" y="50" text-anchor="middle" fill="#6272a4" font-family="Space Mono,monospace" font-size="9">name='Ahmed'</text>
+        <text x="348" y="64" text-anchor="middle" fill="#6272a4" font-family="Space Mono,monospace" font-size="9">age=24</text>
+        <!-- Arrow 2 -->
+        <line x1="190" y1="95" x2="265" y2="110" stroke="#a78bfa" stroke-width="1.5" marker-end="url(#ma)"/>
+        <!-- Instance 2 -->
+        <rect x="268" y="88" width="160" height="60" rx="8" fill="rgba(52,211,153,0.07)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="348" y="110" text-anchor="middle" fill="#34d399" font-family="Space Mono,monospace" font-size="10" font-weight="700">p2 = Person(...)</text>
+        <text x="348" y="128" text-anchor="middle" fill="#6272a4" font-family="Space Mono,monospace" font-size="9">name='Salma'</text>
+        <text x="348" y="142" text-anchor="middle" fill="#6272a4" font-family="Space Mono,monospace" font-size="9">age=30</text>
+        <!-- Labels -->
+        <text x="470" y="75" text-anchor="middle" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="10">Each instance is independent</text>
+        <text x="470" y="90" text-anchor="middle" fill="#94a3b8" font-family="DM Sans,sans-serif" font-size="10">with its own data.</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ATTRIBUTES -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🗂️</div>
+      <h2>Data Attributes vs. Class Attributes</h2>
+    </div>
+    <p class="prose">There are two kinds of attributes. <strong>Data attributes</strong> (instance variables) belong to each individual object. <strong>Class attributes</strong> are shared by all instances — like a static variable in Java.</p>
+
+    <div class="code-block">
+      <div class="code-header"><div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div><span class="code-label">instance vs. class attributes</span></div>
+      <div class="code-body"><span class="kw">class</span> <span class="cls">Person</span>:
+    <span class="var">species</span> = <span class="str">"Homo sapiens"</span>   <span class="cm"># class attribute — shared by all</span>
+    <span class="var">count</span>   = <span class="num">0</span>               <span class="cm"># tracks how many instances exist</span>
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="var">self</span>, <span class="var">name</span>, <span class="var">age</span>):
+        <span class="var">self</span>.<span class="var">name</span> = <span class="var">name</span>         <span class="cm"># data attribute — unique per instance</span>
+        <span class="var">self</span>.<span class="var">age</span>  = <span class="var">age</span>
+        <span class="cls">Person</span>.<span class="var">count</span> += <span class="num">1</span>       <span class="cm"># increment the shared counter</span>
+
+<span class="var">p1</span> = <span class="cls">Person</span>(<span class="str">"Ahmed"</span>, <span class="num">24</span>)
+<span class="var">p2</span> = <span class="cls">Person</span>(<span class="str">"Salma"</span>, <span class="num">30</span>)
+
+<span class="fn">print</span>(<span class="var">p1</span>.<span class="var">species</span>)     <span class="cm"># Homo sapiens</span>
+<span class="fn">print</span>(<span class="var">p2</span>.<span class="var">species</span>)     <span class="cm"># Homo sapiens  (same for all)</span>
+<span class="fn">print</span>(<span class="cls">Person</span>.<span class="var">count</span>)   <span class="cm"># 2</span></div>
+    </div>
+
+    <div class="highlight-box green">
+      ♻️ <strong>No manual memory management:</strong> Python has automatic garbage collection. When all references to an object go out of scope, Python frees the memory automatically. You don't need a destructor or <code style="font-family:Space Mono,monospace;font-size:0.85em">free()</code>.
+    </div>
+  </div>
+
+  <!-- INHERITANCE -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🧬</div>
+      <h2>Inheritance</h2>
+    </div>
+    <p class="prose">Inheritance lets one class <strong>derive properties and methods from another</strong>. The class being inherited from is the <em>parent</em> (or superclass); the one inheriting is the <em>child</em> (or subclass). The child gets everything the parent has, and can add or override.</p>
+
+    <div class="code-block">
+      <div class="code-header"><div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div><span class="code-label">inheritance example</span></div>
+      <div class="code-body"><span class="kw">class</span> <span class="cls">Animal</span>:                     <span class="cm"># parent class</span>
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="var">self</span>, <span class="var">name</span>):
+        <span class="var">self</span>.<span class="var">name</span> = <span class="var">name</span>
+    <span class="kw">def</span> <span class="fn">speak</span>(<span class="var">self</span>):
+        <span class="fn">print</span>(<span class="str">f"<span class="var">{self.name}</span> makes a sound."</span>)
+
+<span class="kw">class</span> <span class="cls">Dog</span>(<span class="cls">Animal</span>):                <span class="cm"># Dog inherits from Animal</span>
+    <span class="kw">def</span> <span class="fn">speak</span>(<span class="var">self</span>):              <span class="cm"># overrides parent method</span>
+        <span class="fn">print</span>(<span class="str">f"<span class="var">{self.name}</span> barks: Woof!"</span>)
+
+<span class="kw">class</span> <span class="cls">Cat</span>(<span class="cls">Animal</span>):                <span class="cm"># Cat also inherits from Animal</span>
+    <span class="kw">def</span> <span class="fn">speak</span>(<span class="var">self</span>):
+        <span class="fn">print</span>(<span class="str">f"<span class="var">{self.name}</span> meows: Meow!"</span>)
+
+<span class="var">d</span> = <span class="cls">Dog</span>(<span class="str">"Rex"</span>)
+<span class="var">c</span> = <span class="cls">Cat</span>(<span class="str">"Luna"</span>)
+<span class="var">d</span>.<span class="fn">speak</span>()   <span class="cm"># Rex barks: Woof!</span>
+<span class="var">c</span>.<span class="fn">speak</span>()   <span class="cm"># Luna meows: Meow!</span>
+<span class="cm"># Both share the same 'name' attribute from Animal</span></div>
+    </div>
+
+    <div class="highlight-box">
+      🔄 <strong>Polymorphism in action:</strong> When Dog and Cat both override <code style="font-family:Space Mono,monospace;font-size:0.85em">speak()</code>, they exhibit polymorphism — the same method name behaves differently depending on the object type. This is what makes code flexible and extensible.
+    </div>
+  </div>
+
+  <!-- ACCESSING ATTRIBUTES AT RUNTIME -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🔍</div>
+      <h2>Accessing Attributes Dynamically</h2>
+    </div>
+    <p class="prose">Sometimes you only know the name of an attribute at runtime (e.g., it comes from user input). Python's built-in <code style="font-family:Space Mono,monospace;font-size:0.85em;color:var(--accent)">getattr()</code> function solves this elegantly.</p>
+
+    <div class="code-block">
+      <div class="code-header"><div class="code-dots"><div class="code-dot r"></div><div class="code-dot y"></div><div class="code-dot g"></div></div><span class="code-label">getattr() — dynamic access</span></div>
+      <div class="code-body"><span class="kw">class</span> <span class="cls">Person</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="var">self</span>, <span class="var">name</span>, <span class="var">age</span>):
+        <span class="var">self</span>.<span class="var">name</span> = <span class="var">name</span>
+        <span class="var">self</span>.<span class="var">age</span>  = <span class="var">age</span>
+
+<span class="var">p</span> = <span class="cls">Person</span>(<span class="str">"Ahmed"</span>, <span class="num">24</span>)
+<span class="var">field</span> = <span class="str">"name"</span>   <span class="cm"># imagine this comes from user input</span>
+
+<span class="cm"># Normal access (static, known at write-time)</span>
+<span class="fn">print</span>(<span class="var">p</span>.<span class="var">name</span>)
+
+<span class="cm"># Dynamic access (known only at runtime)</span>
+<span class="fn">print</span>(<span class="fn">getattr</span>(<span class="var">p</span>, <span class="var">field</span>))           <span class="cm"># Ahmed</span>
+<span class="fn">print</span>(<span class="fn">getattr</span>(<span class="var">p</span>, <span class="str">"age"</span>))           <span class="cm"># 24</span>
+<span class="fn">print</span>(<span class="fn">getattr</span>(<span class="var">p</span>, <span class="str">"city"</span>, <span class="str">"N/A"</span>))  <span class="cm"># N/A (default if missing)</span></div>
+    </div>
+  </div>
+
+  <!-- LIVE TERMINAL -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">⌨️</div>
+      <h2>Try It — Live Python Terminal</h2>
+    </div>
+    <p class="prose">Experiment with classes directly in your browser. Load a snippet or write your own.</p>
+
+    <div class="terminal-wrapper">
+      <div class="terminal-header">
+        <div class="terminal-title"><span class="term-dot"></span> Python 3 · Live Terminal</div>
+        <span style="font-family:Space Mono,monospace;font-size:0.7rem;color:var(--text-muted)">Ctrl+Enter to run</span>
+      </div>
+      <div class="terminal-body">
+        <div class="snippet-btns">
+          <button class="snip-btn" onclick="loadSnip('basic')">Basic class</button>
+          <button class="snip-btn" onclick="loadSnip('attr')">Class attribute</button>
+          <button class="snip-btn" onclick="loadSnip('inherit')">Inheritance</button>
+          <button class="snip-btn" onclick="loadSnip('poly')">Polymorphism</button>
+          <button class="snip-btn" onclick="loadSnip('getattr')">getattr()</button>
+          <button class="snip-btn" onclick="loadSnip('restaurant')">Restaurant</button>
+        </div>
+        <div id="py-output"># Output will appear here...</div>
+        <div class="terminal-input-row">
+          <span class="term-prompt">&gt;&gt;&gt;</span>
+          <textarea id="py-code" spellcheck="false">class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.age  = age
+    def greet(self):
+        print(f"Hi, I'm {self.name}, age {self.age}!")
+
+p = Person("Ahmed", 24)
+p.greet()</textarea>
+        </div>
+        <div class="term-btns">
+          <button class="btn-run" onclick="runPython()">&#9654; Run</button>
+          <button class="btn-clear" onclick="clearTerminal()">&#10005; Clear</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LECTURE NAVIGATION -->
+  <div class="lec-nav">
+    <a href="lecture6.html" class="lec-nav-btn prev">&#8592; Lecture 06</a>
+    <a href="index.html" class="lec-nav-btn home">&#8962; Course Home</a>
+    <span class="lec-nav-spacer"></span>
+    <a href="lecture8.html" class="lec-nav-btn next">Lecture 08 &#8594;</a>
+  </div>
+
+</main>
+<script>
+const snippets = {
+  basic: `class Person:\n    def __init__(self, name, age, city):\n        self.name = name\n        self.age  = age\n        self.city = city\n    def introduce(self):\n        print(f"I'm {self.name}, {self.age} years old from {self.city}.")\n\np1 = Person('Ahmed', 24, 'Giza')\np2 = Person('Salma', 30, 'Cairo')\np1.introduce()\np2.introduce()`,
+  attr: `class Person:\n    species = "Homo sapiens"  # class attribute\n    count   = 0\n\n    def __init__(self, name):\n        self.name = name\n        Person.count += 1\n\np1 = Person("Ahmed")\np2 = Person("Salma")\nprint(p1.species)\nprint(p2.species)\nprint(Person.count)`,
+  inherit: `class Animal:\n    def __init__(self, name):\n        self.name = name\n    def speak(self):\n        print(f"{self.name} makes a sound.")\n\nclass Dog(Animal):\n    def speak(self):\n        print(f"{self.name} barks: Woof!")\n\nclass Cat(Animal):\n    def speak(self):\n        print(f"{self.name} meows: Meow!")\n\nDog("Rex").speak()\nCat("Luna").speak()`,
+  poly: `class Shape:\n    def area(self):\n        return 0\n\nclass Circle(Shape):\n    def __init__(self, r):\n        self.r = r\n    def area(self):\n        return 3.14159 * self.r ** 2\n\nclass Rectangle(Shape):\n    def __init__(self, w, h):\n        self.w, self.h = w, h\n    def area(self):\n        return self.w * self.h\n\nshapes = [Circle(5), Rectangle(4, 6)]\nfor s in shapes:\n    print(f"{type(s).__name__}: area = {s.area():.2f}")`,
+  getattr: `class Person:\n    def __init__(self, name, age):\n        self.name = name\n        self.age  = age\n\np = Person("Ahmed", 24)\nfor field in ["name", "age", "city"]:\n    val = getattr(p, field, "N/A")\n    print(f"{field}: {val}")`,
+  restaurant: `class Restaurant:\n    def __init__(self):\n        self.menu_items = {}\n        self.book_table = []\n        self.customer_orders = []\n\n    def add_item_to_menu(self, item, price):\n        self.menu_items[item] = price\n\n    def book_tables(self, name, table_no):\n        self.book_table.append({"name": name, "table": table_no})\n\n    def customer_order(self, customer, item):\n        self.customer_orders.append({"customer": customer, "item": item})\n\nr = Restaurant()\nr.add_item_to_menu("Pizza", 120)\nr.add_item_to_menu("Pasta", 90)\nr.book_tables("Ahmed", 3)\nr.customer_order("Ahmed", "Pizza")\nprint("Menu:", r.menu_items)\nprint("Reservations:", r.book_table)\nprint("Orders:", r.customer_orders)`
+};
+
+function loadSnip(k) { document.getElementById('py-code').value = snippets[k]; }
+
+function runPython() {
+  const code = document.getElementById('py-code').value;
+  const out = document.getElementById('py-output');
+  out.className = '';
+  let outText = '';
+  function outf(text) { outText += text; }
+  function builtinRead(x) {
+    if (Sk.builtinFiles === undefined || Sk.builtinFiles['files'][x] === undefined)
+      throw "File not found: '" + x + "'";
+    return Sk.builtinFiles['files'][x];
+  }
+  Sk.configure({ output: outf, read: builtinRead, __future__: Sk.python3 });
+  Sk.misceval.asyncToPromise(function() {
+    return Sk.importMainWithBody('<stdin>', false, code, true);
+  }).then(function() {
+    out.textContent = outText || '(no output)';
+    out.className = '';
+  }).catch(function(e) {
+    out.textContent = e.toString();
+    out.className = 'error';
+  });
+}
+
+function clearTerminal() {
+  document.getElementById('py-output').textContent = '# Output will appear here...';
+  document.getElementById('py-output').className = '';
+  document.getElementById('py-code').value = '';
+}
+
+document.getElementById('py-code').addEventListener('keydown', function(e) {
+  if (e.key === 'Tab') {
+    e.preventDefault();
+    const s = this.selectionStart;
+    this.value = this.value.substring(0, s) + '    ' + this.value.substring(this.selectionEnd);
+    this.selectionStart = this.selectionEnd = s + 4;
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') runPython();
+});
+</script>
+</body>
+</html>
